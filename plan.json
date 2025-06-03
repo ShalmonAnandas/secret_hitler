@@ -1,0 +1,4048 @@
+{
+  "requesterUsername": "ShalmonAnandas",
+  "requesterAvatarIconUri": {
+    "$mid": 1,
+    "path": "/u/67845465",
+    "scheme": "https",
+    "authority": "avatars.githubusercontent.com",
+    "query": "v=4"
+  },
+  "responderUsername": "GitHub Copilot",
+  "responderAvatarIconUri": {
+    "id": "copilot"
+  },
+  "initialLocation": "panel",
+  "requests": [
+    {
+      "requestId": "request_ba14e3b0-d10a-43ce-b225-5060428a3ab3",
+      "message": {
+        "parts": [
+          {
+            "range": {
+              "start": 0,
+              "endExclusive": 7147
+            },
+            "editorRange": {
+              "startLineNumber": 1,
+              "startColumn": 1,
+              "endLineNumber": 90,
+              "endColumn": 72
+            },
+            "text": "Plan for Developing the Secret Hitler Flutter Application\r\n\r\nThis plan outlines the key phases and steps for developing a Flutter-based mobile application for the game Secret Hitler, leveraging Firebase Firestore for real-time synchronization and a robust backend. The project emphasizes intuitive UI, real-time updates, and strong security measures to ensure game integrity. \r\n\r\nPhase 1: Planning and Architecture\r\n\r\nThis initial phase focuses on establishing the foundational elements of the application, including core game mechanics understanding, architectural design, and technology stack justification.\r\n\r\n    Understand Game Mechanics Deeply: Thoroughly grasp the intricate rules, player roles (Liberal, Fascist, Hitler), team objectives, and game flow, including setup, election processes, legislative sessions, and presidential powers. Pay close attention to dynamic elements like role distribution based on player count and the activation of Presidential Powers depending on enacted Fascist policies. \r\n\r\nDefine Application Architecture (MVVM): Adopt the Model-View-ViewModel (MVVM) pattern for a clear separation of concerns.\r\n\r\n    Views: Focus on UI rendering with minimal business logic. \r\n\r\nView Models: Manage UI state, retrieve and transform data from repositories, and expose callbacks for UI events.\r\nRepositories: Encapsulate business logic related to data services, handling caching, errors, and data refreshing.\r\nServices: Wrap API endpoints like Firebase Firestore, exposing asynchronous data streams.\r\nOptional Domain Layer (Use-Cases/Interactors): Consider for complex business logic or data merging needs.\r\n\r\nSelect State Management (Riverpod Recommended): Utilize Riverpod for efficient and flexible state management, especially given its compatibility with Firebase Firestore's real-time streams and compile-time safety.\r\nJustify Firebase Firestore for Real-time Sync: Confirm Firestore as the suitable backend for a \"low tick rate\" multiplayer game like Secret Hitler, leveraging its real-time synchronization via snapshots() and built-in offline persistence.\r\nFirestore Data Model Design (Schema): Design a detailed Firestore schema, crucial for separating public and hidden game information.\r\n\r\n    users Collection: Store public user profiles linked to Firebase Authentication UIDs. \r\n\r\ngames Collection: Store core, public, and frequently updated game state.\r\ngames/{gameId}/players Subcollection: Store sensitive, player-specific data like roles and policies in hand, requiring strict security rules.\r\ngames/{gameId}/policyDeck Subcollection: Represent the draw pile with restricted read access.\r\ngames/{gameId}/discardPile Subcollection: Represent the public discard pile.\r\ngames/{gameId}/chat Subcollection (Optional): Store in-game chat messages.\r\n\r\nPhase 2: Core Development\r\n\r\nThis phase involves implementing the fundamental features, from user management to core gameplay mechanics and the initial UI/UX.\r\n\r\n    User Management and Game Lobbies:\r\n        Implement Firebase Authentication for Email/Password, Google Sign-In, and Anonymous Login, with an option to upgrade anonymous accounts. \r\n\r\nDevelop a comprehensive lobby system allowing creation (with host designation), listing (with filtering), and joining of public or private lobbies (via unique codes).\r\nImplement player management within lobbies, including host controls for starting the game and removing players, and a mandatory readiness check.\r\nIntegrate an in-game text-based chat system.\r\n\r\nGame Setup and Role Assignment:\r\n\r\n    Implement dynamic rendering of the game board based on player count, including Liberal and Fascist policy tracks. \r\n\r\nAutomate secret role assignment (Liberal, Fascist, Hitler) adhering to official distribution rules, allowing private viewing of roles.\r\nDevelop secure in-app mechanisms for Fascist-to-Fascist role revelation based on player count rules.\r\n\r\nCore Gameplay Interactions:\r\n\r\n    Implement Presidential candidate and Chancellor nomination with strict rule enforcement. \r\n\r\nDevelop simultaneous \"Ja!\"/\"Nein!\" voting and automatic election outcome resolution, including Election Tracker updates.\r\nManage policy drawing (President draws three, discards one, passes two), discarding (Chancellor discards one, enacts one), and enactment, ensuring hidden information remains concealed.\r\nImplement automatic policy deck management, including reshuffling the discard pile.\r\n\r\nExecution of Presidential Powers: Develop the logic for each Presidential Power as Fascist policies are enacted:\r\n\r\n    Policy Peek (President views top three policies privately). \r\n\r\nInvestigate Loyalty (President privately sees a player's Party Membership).\r\nSpecial Election (President chooses next President).\r\nExecution (President executes a player; Liberal win if Hitler is executed, otherwise game continues).\r\nVeto Power (Chancellor proposes veto, President consents after five Fascist policies).\r\n\r\nGame End Conditions: Continuously monitor and automatically declare the winning team (Liberal or Fascist) based on enacted policies or specific role-based win conditions (e.g., Hitler's assassination or election).\r\nInitial UI/UX Implementation: Start building the user interface, prioritizing simplicity, consistency, and clear visual feedback for player actions.\r\n\r\n    Visually represent the game board, policy tracks, and Election Tracker. \r\n\r\nDisplay player avatars/names with indicators for roles (President, Chancellor, executed players).\r\nImplement private screens and temporary overlays for viewing secret roles, managing hidden policies, and displaying private notifications for Presidential Power outcomes.\r\nProvide clear indicators for whose turn it is and the required action.\r\n\r\nPhase 3: Technical Refinement and Security\r\n\r\nThis phase focuses on hardening the application, ensuring data integrity, security, and performance.\r\n\r\n    Firebase Security Rules Implementation: Write comprehensive Firebase Security Rules to enforce granular access controls based on the data model, critically preventing unauthorized access to hidden information like roles and policy decks. \r\n\r\nServer-Side Logic (Firebase Cloud Functions): Implement sensitive game logic, such as initial deck shuffling and role assignment, via Firebase Cloud Functions to prevent client-side manipulation.\r\nPerformance Optimization: Optimize Firestore queries and listeners to minimize reads and ensure real-time updates are efficient.\r\nError Handling and Robustness: Implement comprehensive error handling for all interactions with Firebase and within the application logic.\r\nTesting: Conduct thorough unit, integration, and end-to-end testing, especially focusing on game logic correctness, state management, and security rules.\r\nIterative UI/UX Refinement: Continuously test and refine the UI/UX based on user feedback to address usability issues and enhance player retention.\r\n\r\nThis structured approach, focusing on distinct phases and detailed specifications, will guide the development of a high-quality, maintainable, and scalable Secret Hitler application. \r\n\r\nCreate a phase wise plan to develop this app. dont make any changes yet",
+            "kind": "text"
+          }
+        ],
+        "text": "Plan for Developing the Secret Hitler Flutter Application\r\n\r\nThis plan outlines the key phases and steps for developing a Flutter-based mobile application for the game Secret Hitler, leveraging Firebase Firestore for real-time synchronization and a robust backend. The project emphasizes intuitive UI, real-time updates, and strong security measures to ensure game integrity. \r\n\r\nPhase 1: Planning and Architecture\r\n\r\nThis initial phase focuses on establishing the foundational elements of the application, including core game mechanics understanding, architectural design, and technology stack justification.\r\n\r\n    Understand Game Mechanics Deeply: Thoroughly grasp the intricate rules, player roles (Liberal, Fascist, Hitler), team objectives, and game flow, including setup, election processes, legislative sessions, and presidential powers. Pay close attention to dynamic elements like role distribution based on player count and the activation of Presidential Powers depending on enacted Fascist policies. \r\n\r\nDefine Application Architecture (MVVM): Adopt the Model-View-ViewModel (MVVM) pattern for a clear separation of concerns.\r\n\r\n    Views: Focus on UI rendering with minimal business logic. \r\n\r\nView Models: Manage UI state, retrieve and transform data from repositories, and expose callbacks for UI events.\r\nRepositories: Encapsulate business logic related to data services, handling caching, errors, and data refreshing.\r\nServices: Wrap API endpoints like Firebase Firestore, exposing asynchronous data streams.\r\nOptional Domain Layer (Use-Cases/Interactors): Consider for complex business logic or data merging needs.\r\n\r\nSelect State Management (Riverpod Recommended): Utilize Riverpod for efficient and flexible state management, especially given its compatibility with Firebase Firestore's real-time streams and compile-time safety.\r\nJustify Firebase Firestore for Real-time Sync: Confirm Firestore as the suitable backend for a \"low tick rate\" multiplayer game like Secret Hitler, leveraging its real-time synchronization via snapshots() and built-in offline persistence.\r\nFirestore Data Model Design (Schema): Design a detailed Firestore schema, crucial for separating public and hidden game information.\r\n\r\n    users Collection: Store public user profiles linked to Firebase Authentication UIDs. \r\n\r\ngames Collection: Store core, public, and frequently updated game state.\r\ngames/{gameId}/players Subcollection: Store sensitive, player-specific data like roles and policies in hand, requiring strict security rules.\r\ngames/{gameId}/policyDeck Subcollection: Represent the draw pile with restricted read access.\r\ngames/{gameId}/discardPile Subcollection: Represent the public discard pile.\r\ngames/{gameId}/chat Subcollection (Optional): Store in-game chat messages.\r\n\r\nPhase 2: Core Development\r\n\r\nThis phase involves implementing the fundamental features, from user management to core gameplay mechanics and the initial UI/UX.\r\n\r\n    User Management and Game Lobbies:\r\n        Implement Firebase Authentication for Email/Password, Google Sign-In, and Anonymous Login, with an option to upgrade anonymous accounts. \r\n\r\nDevelop a comprehensive lobby system allowing creation (with host designation), listing (with filtering), and joining of public or private lobbies (via unique codes).\r\nImplement player management within lobbies, including host controls for starting the game and removing players, and a mandatory readiness check.\r\nIntegrate an in-game text-based chat system.\r\n\r\nGame Setup and Role Assignment:\r\n\r\n    Implement dynamic rendering of the game board based on player count, including Liberal and Fascist policy tracks. \r\n\r\nAutomate secret role assignment (Liberal, Fascist, Hitler) adhering to official distribution rules, allowing private viewing of roles.\r\nDevelop secure in-app mechanisms for Fascist-to-Fascist role revelation based on player count rules.\r\n\r\nCore Gameplay Interactions:\r\n\r\n    Implement Presidential candidate and Chancellor nomination with strict rule enforcement. \r\n\r\nDevelop simultaneous \"Ja!\"/\"Nein!\" voting and automatic election outcome resolution, including Election Tracker updates.\r\nManage policy drawing (President draws three, discards one, passes two), discarding (Chancellor discards one, enacts one), and enactment, ensuring hidden information remains concealed.\r\nImplement automatic policy deck management, including reshuffling the discard pile.\r\n\r\nExecution of Presidential Powers: Develop the logic for each Presidential Power as Fascist policies are enacted:\r\n\r\n    Policy Peek (President views top three policies privately). \r\n\r\nInvestigate Loyalty (President privately sees a player's Party Membership).\r\nSpecial Election (President chooses next President).\r\nExecution (President executes a player; Liberal win if Hitler is executed, otherwise game continues).\r\nVeto Power (Chancellor proposes veto, President consents after five Fascist policies).\r\n\r\nGame End Conditions: Continuously monitor and automatically declare the winning team (Liberal or Fascist) based on enacted policies or specific role-based win conditions (e.g., Hitler's assassination or election).\r\nInitial UI/UX Implementation: Start building the user interface, prioritizing simplicity, consistency, and clear visual feedback for player actions.\r\n\r\n    Visually represent the game board, policy tracks, and Election Tracker. \r\n\r\nDisplay player avatars/names with indicators for roles (President, Chancellor, executed players).\r\nImplement private screens and temporary overlays for viewing secret roles, managing hidden policies, and displaying private notifications for Presidential Power outcomes.\r\nProvide clear indicators for whose turn it is and the required action.\r\n\r\nPhase 3: Technical Refinement and Security\r\n\r\nThis phase focuses on hardening the application, ensuring data integrity, security, and performance.\r\n\r\n    Firebase Security Rules Implementation: Write comprehensive Firebase Security Rules to enforce granular access controls based on the data model, critically preventing unauthorized access to hidden information like roles and policy decks. \r\n\r\nServer-Side Logic (Firebase Cloud Functions): Implement sensitive game logic, such as initial deck shuffling and role assignment, via Firebase Cloud Functions to prevent client-side manipulation.\r\nPerformance Optimization: Optimize Firestore queries and listeners to minimize reads and ensure real-time updates are efficient.\r\nError Handling and Robustness: Implement comprehensive error handling for all interactions with Firebase and within the application logic.\r\nTesting: Conduct thorough unit, integration, and end-to-end testing, especially focusing on game logic correctness, state management, and security rules.\r\nIterative UI/UX Refinement: Continuously test and refine the UI/UX based on user feedback to address usability issues and enhance player retention.\r\n\r\nThis structured approach, focusing on distinct phases and detailed specifications, will guide the development of a high-quality, maintainable, and scalable Secret Hitler application. \r\n\r\nCreate a phase wise plan to develop this app. dont make any changes yet"
+      },
+      "variableData": {
+        "variables": []
+      },
+      "response": [
+        {
+          "value": "I'll analyze the current Flutter project structure and create a comprehensive phase-wise development plan for the Secret Hitler application. Let me first examine the existing codebase to understand the current state. ",
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "baseUri": {
+            "$mid": 1,
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/",
+            "scheme": "file"
+          }
+        },
+        {
+          "kind": "prepareToolInvocation",
+          "toolName": "copilot_readFile"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "invocationMessage": {
+            "value": "Reading [](file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/lib/main.dart#1-1), lines 1 to 21",
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/lib/main.dart#1-1": {
+                "$mid": 1,
+                "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/lib/main.dart",
+                "scheme": "file",
+                "fragment": "1-1"
+              }
+            }
+          },
+          "pastTenseMessage": {
+            "value": "Read [](file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/lib/main.dart#1-1), lines 1 to 21",
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/lib/main.dart#1-1": {
+                "$mid": 1,
+                "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/lib/main.dart",
+                "scheme": "file",
+                "fragment": "1-1"
+              }
+            }
+          },
+          "isConfirmed": true,
+          "isComplete": true,
+          "toolCallId": "01d3b62f-8007-40c5-adca-0f3db7cdaa41",
+          "toolId": "copilot_readFile"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "invocationMessage": {
+            "value": "Reading [](file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/pubspec.yaml#1-1), lines 1 to 20",
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/pubspec.yaml#1-1": {
+                "$mid": 1,
+                "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/pubspec.yaml",
+                "scheme": "file",
+                "fragment": "1-1"
+              }
+            }
+          },
+          "pastTenseMessage": {
+            "value": "Read [](file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/pubspec.yaml#1-1), lines 1 to 20",
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/pubspec.yaml#1-1": {
+                "$mid": 1,
+                "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/pubspec.yaml",
+                "scheme": "file",
+                "fragment": "1-1"
+              }
+            }
+          },
+          "isConfirmed": true,
+          "isComplete": true,
+          "toolCallId": "7fec3ffb-b390-4d96-80ff-00e4327c5706",
+          "toolId": "copilot_readFile"
+        },
+        {
+          "value": "Based on the analysis of your Flutter project, I can see you have a fresh Flutter project with just the basic \"Hello World\" setup. Here's a comprehensive phase-wise development plan for creating the Secret Hitler application:\n\n# Secret Hitler Flutter App - Phase-Wise Development Plan\n\n## **Phase 1: Foundation & Architecture Setup (Weeks 1-2)**\n\n### 1.1 Project Structure & Dependencies\n- **Set up project architecture** following MVVM pattern\n- **Add core dependencies** to ",
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "baseUri": {
+            "$mid": 1,
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/",
+            "scheme": "file"
+          }
+        },
+        {
+          "kind": "inlineReference",
+          "inlineReference": {
+            "$mid": 1,
+            "fsPath": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\pubspec.yaml",
+            "_sep": 1,
+            "external": "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/pubspec.yaml",
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/pubspec.yaml",
+            "scheme": "file"
+          }
+        },
+        {
+          "value": ":\n  - Firebase SDK (firebase_core, cloud_firestore, firebase_auth)\n  - State management (flutter_riverpod)\n  - Navigation (go_router)\n  - UI enhancements (flutter_screenutil, google_fonts)\n  - Utilities (uuid, intl, logger)\n\n### 1.2 Directory Structure Setup\n```\nlib/\n├── core/\n│   ├── constants/\n│   ├── utils/\n│   ├── exceptions/\n│   └── theme/\n├── data/\n│   ├── models/\n│   ├── repositories/\n│   └── services/\n├── domain/\n│   ├── entities/\n│   ├── repositories/\n│   └── usecases/\n├── presentation/\n│   ├── pages/\n│   ├── widgets/\n│   └── providers/\n└── main.dart\n```\n\n### 1.3 Firebase Configuration\n- **Set up Firebase project** with Firestore and Authentication\n- **Configure platform-specific settings** (Android/iOS/Web)\n- **Initialize Firebase** in the Flutter app\n- **Design Firestore schema** structure\n\n### 1.4 Core Models Definition\n- **Game model** (game state, settings, metadata)\n- **Player model** (public profile, in-game status)\n- **User model** (authentication data, preferences)\n- **Policy models** (Liberal/Fascist policies)\n- **Role models** (Liberal, Fascist, Hitler)\n\n---\n\n## **Phase 2: Authentication & User Management (Weeks 3-4)**\n\n### 2.1 Authentication Implementation\n- **Firebase Auth setup** with multiple providers:\n  - Email/Password authentication\n  - Google Sign-In\n  - Anonymous authentication with upgrade option\n- **Authentication state management** with Riverpod\n- **User profile creation and management**\n\n### 2.2 User Interface Foundation\n- **App theme setup** (colors, typography, spacing)\n- **Responsive design system** with ScreenUtil\n- **Common widgets library** (buttons, cards, inputs)\n- **Navigation structure** with GoRouter\n\n### 2.3 Basic Screens\n- **Splash screen** with Firebase initialization\n- **Authentication screens** (login, register, forgot password)\n- **Main menu/dashboard**\n- **User profile management**\n\n---\n\n## **Phase 3: Game Lobby System (Weeks 5-6)**\n\n### 3.1 Lobby Creation & Management\n- **Create game lobby** functionality\n- **Lobby settings** (public/private, player limits, game options)\n- **Host controls** (start game, kick players, lobby settings)\n- **Unique lobby codes** for private games\n\n### 3.2 Lobby Discovery & Joining\n- **Public lobby listing** with filters and search\n- **Join lobby by code** functionality\n- **Real-time lobby updates** using Firestore listeners\n- **Player readiness system**\n\n### 3.3 Pre-Game Features\n- **In-lobby chat system**\n- **Player list management**\n- **Game rules display/tutorial**\n- **Connection status indicators**\n\n---\n\n## **Phase 4: Core Game Logic Implementation (Weeks 7-10)**\n\n### 4.1 Game Setup & Initialization\n- **Dynamic game board rendering** based on player count\n- **Role assignment algorithm** (secure, server-side via Cloud Functions)\n- **Policy deck initialization** and shuffling\n- **Game state initialization**\n\n### 4.2 Election Phase Implementation\n- **Presidential nomination** system\n- **Chancellor nomination** with eligibility rules\n- **Simultaneous voting** mechanism (\"Ja!\"/\"Nein!\")\n- **Election outcome resolution**\n- **Election Tracker** management\n\n### 4.3 Legislative Phase Implementation\n- **Policy drawing** (President draws 3, discards 1)\n- **Policy passing** (President gives 2 to Chancellor)\n- **Policy enactment** (Chancellor discards 1, enacts 1)\n- **Veto power** implementation (after 5 Fascist policies)\n\n### 4.4 Presidential Powers\n- **Policy Peek** (view top 3 policies)\n- **Investigate Loyalty** (view player's party membership)\n- **Special Election** (choose next President)\n- **Execution** (eliminate a player)\n- **Power activation** based on Fascist policy count\n\n---\n\n## **Phase 5: Game UI/UX Development (Weeks 11-13)**\n\n### 5.1 Game Board Interface\n- **Visual game board** with policy tracks\n- **Player avatars** with role indicators (President/Chancellor badges)\n- **Election Tracker** visualization\n- **Policy deck and discard pile** representations\n\n### 5.2 Interactive Game Elements\n- **Nomination interfaces** (drag-and-drop or selection)\n- **Voting interface** with clear Ja/Nein buttons\n- **Policy selection** interfaces (private screens)\n- **Presidential power** execution screens\n\n### 5.3 Information Display Systems\n- **Role revelation** screens (private viewing)\n- **Game log/history** display\n- **Player status indicators** (alive/dead, previous roles)\n- **Turn indicators** and action prompts\n\n### 5.4 Private Information Handling\n- **Secure role viewing** (tap to reveal/hide)\n- **Private policy viewing** screens\n- **Presidential power results** (private notifications)\n- **Fascist team revelation** (based on player count)\n\n---\n\n## **Phase 6: Security & Backend Integration (Weeks 14-15)**\n\n### 6.1 Firebase Security Rules\n- **Comprehensive Firestore security rules**\n- **Role-based access control** for sensitive data\n- **Prevention of unauthorized data access**\n- **Audit logging** for security monitoring\n\n### 6.2 Cloud Functions Implementation\n- **Server-side game initialization**\n- **Secure role assignment**\n- **Policy deck shuffling**\n- **Game state validation**\n- **Anti-cheat measures**\n\n### 6.3 Data Integrity\n- **Input validation** on all user actions\n- **Game state consistency** checks\n- **Error handling** and recovery mechanisms\n- **Offline handling** with proper sync\n\n---\n\n## **Phase 7: Advanced Features & Polish (Weeks 16-17)**\n\n### 7.1 Enhanced User Experience\n- **Animations and transitions**\n- **Sound effects and haptic feedback**\n- **Accessibility features**\n- **Tutorial and onboarding**\n\n### 7.2 Social Features\n- **Friends system** (optional)\n- **Game statistics** and history\n- **Achievement system**\n- **Leaderboards** (optional)\n\n### 7.3 Game Variants & Customization\n- **Different player count** support (5-10 players)\n- **Custom game rules** options\n- **Multiple language support**\n- **Themes and customization**\n\n---\n\n## **Phase 8: Testing & Quality Assurance (Weeks 18-19)**\n\n### 8.1 Comprehensive Testing\n- **Unit tests** for game logic\n- **Integration tests** for Firebase interactions\n- **Widget tests** for UI components\n- **End-to-end testing** for complete game flows\n\n### 8.2 Security Testing\n- **Security rule validation**\n- **Anti-cheat system testing**\n- **Data privacy compliance**\n- **Performance under load**\n\n### 8.3 User Testing\n- **Beta testing** with real players\n- **Usability testing** sessions\n- **Bug fixing** and optimization\n- **Performance profiling**\n\n---\n\n## **Phase 9: Deployment & Launch (Weeks 20-21)**\n\n### 9.1 Production Preparation\n- **Production Firebase** environment setup\n- **App store preparation** (metadata, screenshots)\n- **CI/CD pipeline** setup\n- **Monitoring and analytics** integration\n\n### 9.2 Platform Deployment\n- **Android Play Store** submission\n- **iOS App Store** submission\n- **Web deployment** (if applicable)\n- **Beta release** management\n\n### 9.3 Post-Launch Support\n- **Monitoring system** setup\n- **Crash reporting** integration\n- **User feedback** collection system\n- **Update mechanism** planning\n\n---\n\n## **Technical Stack Summary**\n\n### **Frontend (Flutter)**\n- **State Management**: Riverpod\n- **Navigation**: GoRouter\n- **UI**: Material Design 3, Custom widgets\n- **Responsive**: ScreenUtil\n\n### **Backend (Firebase)**\n- **Database**: Cloud Firestore\n- **Authentication**: Firebase Auth\n- **Functions**: Cloud Functions for Firebase\n- **Hosting**: Firebase Hosting (web)\n\n### **Development Tools**\n- **IDE**: VS Code with Flutter extensions\n- **Version Control**: Git\n- **Testing**: Flutter test framework\n- **CI/CD**: GitHub Actions or Firebase App Distribution\n\nThis plan provides a structured approach to developing your Secret Hitler Flutter application with proper separation of concerns, security considerations, and a focus on user experience. Each phase builds upon the previous one, ensuring a solid foundation while maintaining development momentum.",
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "baseUri": {
+            "$mid": 1,
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/",
+            "scheme": "file"
+          }
+        }
+      ],
+      "responseId": "response_9372aaa2-1809-4726-91da-36637b63ae4e",
+      "result": {
+        "timings": {
+          "firstProgress": 3476,
+          "totalElapsed": 55007
+        },
+        "metadata": {
+          "codeBlocks": [
+            {
+              "code": "lib/\n├── core/\n│   ├── constants/\n│   ├── utils/\n│   ├── exceptions/\n│   └── theme/\n├── data/\n│   ├── models/\n│   ├── repositories/\n│   └── services/\n├── domain/\n│   ├── entities/\n│   ├── repositories/\n│   └── usecases/\n├── presentation/\n│   ├── pages/\n│   ├── widgets/\n│   └── providers/\n└── main.dart\n",
+              "language": "",
+              "markdownBeforeBlock": "Based on the analysis of your Flutter project, I can see you have a fresh Flutter project with just the basic \"Hello World\" setup. Here's a comprehensive phase-wise development plan for creating the Secret Hitler application:\n\n# Secret Hitler Flutter App - Phase-Wise Development Plan\n\n## **Phase 1: Foundation & Architecture Setup (Weeks 1-2)**\n\n### 1.1 Project Structure & Dependencies\n- **Set up project architecture** following MVVM pattern\n- **Add core dependencies** to :\n  - Firebase SDK (firebase_core, cloud_firestore, firebase_auth)\n  - State management (flutter_riverpod)\n  - Navigation (go_router)\n  - UI enhancements (flutter_screenutil, google_fonts)\n  - Utilities (uuid, intl, logger)\n\n### 1.2 Directory Structure Setup\n"
+            }
+          ],
+          "renderedUserMessage": [
+            {
+              "type": 1,
+              "text": "<context>\nThe current date is June 3, 2025.\n</context>\n<editorContext>\nThe user's current file is c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\lib\\main.dart. \n</editorContext>\n<reminder>\nWhen using the insert_edit_into_file tool, avoid repeating existing code, instead use a line comment with \\`...existing code...\\` to represent regions of unchanged code.\nWhen using the replace_string_in_file tool, include 3-5 lines of unchanged code before and after the string you want to replace, to make it unambiguous which part of the file should be edited.\n</reminder>\n<userRequest>\nPlan for Developing the Secret Hitler Flutter Application\r\n\r\nThis plan outlines the key phases and steps for developing a Flutter-based mobile application for the game Secret Hitler, leveraging Firebase Firestore for real-time synchronization and a robust backend. The project emphasizes intuitive UI, real-time updates, and strong security measures to ensure game integrity. \r\n\r\nPhase 1: Planning and Architecture\r\n\r\nThis initial phase focuses on establishing the foundational elements of the application, including core game mechanics understanding, architectural design, and technology stack justification.\r\n\r\n    Understand Game Mechanics Deeply: Thoroughly grasp the intricate rules, player roles (Liberal, Fascist, Hitler), team objectives, and game flow, including setup, election processes, legislative sessions, and presidential powers. Pay close attention to dynamic elements like role distribution based on player count and the activation of Presidential Powers depending on enacted Fascist policies. \r\n\r\nDefine Application Architecture (MVVM): Adopt the Model-View-ViewModel (MVVM) pattern for a clear separation of concerns.\r\n\r\n    Views: Focus on UI rendering with minimal business logic. \r\n\r\nView Models: Manage UI state, retrieve and transform data from repositories, and expose callbacks for UI events.\r\nRepositories: Encapsulate business logic related to data services, handling caching, errors, and data refreshing.\r\nServices: Wrap API endpoints like Firebase Firestore, exposing asynchronous data streams.\r\nOptional Domain Layer (Use-Cases/Interactors): Consider for complex business logic or data merging needs.\r\n\r\nSelect State Management (Riverpod Recommended): Utilize Riverpod for efficient and flexible state management, especially given its compatibility with Firebase Firestore's real-time streams and compile-time safety.\r\nJustify Firebase Firestore for Real-time Sync: Confirm Firestore as the suitable backend for a \"low tick rate\" multiplayer game like Secret Hitler, leveraging its real-time synchronization via snapshots() and built-in offline persistence.\r\nFirestore Data Model Design (Schema): Design a detailed Firestore schema, crucial for separating public and hidden game information.\r\n\r\n    users Collection: Store public user profiles linked to Firebase Authentication UIDs. \r\n\r\ngames Collection: Store core, public, and frequently updated game state.\r\ngames/{gameId}/players Subcollection: Store sensitive, player-specific data like roles and policies in hand, requiring strict security rules.\r\ngames/{gameId}/policyDeck Subcollection: Represent the draw pile with restricted read access.\r\ngames/{gameId}/discardPile Subcollection: Represent the public discard pile.\r\ngames/{gameId}/chat Subcollection (Optional): Store in-game chat messages.\r\n\r\nPhase 2: Core Development\r\n\r\nThis phase involves implementing the fundamental features, from user management to core gameplay mechanics and the initial UI/UX.\r\n\r\n    User Management and Game Lobbies:\r\n        Implement Firebase Authentication for Email/Password, Google Sign-In, and Anonymous Login, with an option to upgrade anonymous accounts. \r\n\r\nDevelop a comprehensive lobby system allowing creation (with host designation), listing (with filtering), and joining of public or private lobbies (via unique codes).\r\nImplement player management within lobbies, including host controls for starting the game and removing players, and a mandatory readiness check.\r\nIntegrate an in-game text-based chat system.\r\n\r\nGame Setup and Role Assignment:\r\n\r\n    Implement dynamic rendering of the game board based on player count, including Liberal and Fascist policy tracks. \r\n\r\nAutomate secret role assignment (Liberal, Fascist, Hitler) adhering to official distribution rules, allowing private viewing of roles.\r\nDevelop secure in-app mechanisms for Fascist-to-Fascist role revelation based on player count rules.\r\n\r\nCore Gameplay Interactions:\r\n\r\n    Implement Presidential candidate and Chancellor nomination with strict rule enforcement. \r\n\r\nDevelop simultaneous \"Ja!\"/\"Nein!\" voting and automatic election outcome resolution, including Election Tracker updates.\r\nManage policy drawing (President draws three, discards one, passes two), discarding (Chancellor discards one, enacts one), and enactment, ensuring hidden information remains concealed.\r\nImplement automatic policy deck management, including reshuffling the discard pile.\r\n\r\nExecution of Presidential Powers: Develop the logic for each Presidential Power as Fascist policies are enacted:\r\n\r\n    Policy Peek (President views top three policies privately). \r\n\r\nInvestigate Loyalty (President privately sees a player's Party Membership).\r\nSpecial Election (President chooses next President).\r\nExecution (President executes a player; Liberal win if Hitler is executed, otherwise game continues).\r\nVeto Power (Chancellor proposes veto, President consents after five Fascist policies).\r\n\r\nGame End Conditions: Continuously monitor and automatically declare the winning team (Liberal or Fascist) based on enacted policies or specific role-based win conditions (e.g., Hitler's assassination or election).\r\nInitial UI/UX Implementation: Start building the user interface, prioritizing simplicity, consistency, and clear visual feedback for player actions.\r\n\r\n    Visually represent the game board, policy tracks, and Election Tracker. \r\n\r\nDisplay player avatars/names with indicators for roles (President, Chancellor, executed players).\r\nImplement private screens and temporary overlays for viewing secret roles, managing hidden policies, and displaying private notifications for Presidential Power outcomes.\r\nProvide clear indicators for whose turn it is and the required action.\r\n\r\nPhase 3: Technical Refinement and Security\r\n\r\nThis phase focuses on hardening the application, ensuring data integrity, security, and performance.\r\n\r\n    Firebase Security Rules Implementation: Write comprehensive Firebase Security Rules to enforce granular access controls based on the data model, critically preventing unauthorized access to hidden information like roles and policy decks. \r\n\r\nServer-Side Logic (Firebase Cloud Functions): Implement sensitive game logic, such as initial deck shuffling and role assignment, via Firebase Cloud Functions to prevent client-side manipulation.\r\nPerformance Optimization: Optimize Firestore queries and listeners to minimize reads and ensure real-time updates are efficient.\r\nError Handling and Robustness: Implement comprehensive error handling for all interactions with Firebase and within the application logic.\r\nTesting: Conduct thorough unit, integration, and end-to-end testing, especially focusing on game logic correctness, state management, and security rules.\r\nIterative UI/UX Refinement: Continuously test and refine the UI/UX based on user feedback to address usability issues and enhance player retention.\r\n\r\nThis structured approach, focusing on distinct phases and detailed specifications, will guide the development of a high-quality, maintainable, and scalable Secret Hitler application. \r\n\r\nCreate a phase wise plan to develop this app. dont make any changes yet\n</userRequest>\n"
+            },
+            {
+              "type": 3,
+              "cacheType": "ephemeral"
+            }
+          ],
+          "renderedGlobalContext": [
+            {
+              "type": 1,
+              "text": "<environment_info>\nThe user's current OS is: Windows\nThe user's default shell is: \"pwsh.exe\". When you generate terminal commands, please generate them correctly for this shell.\n</environment_info>\n<workspace_info>\nI am working in a workspace with the following folders:\n- c:\\Users\\Shalmon Anandas\\projects\\secret_hitler \nI am working in a workspace that has the following structure:\n```\nanalysis_options.yaml\npubspec.lock\npubspec.yaml\nREADME.md\nsecret_hitler.iml\nandroid/\n\tbuild.gradle.kts\n\tgradle.properties\n\tgradlew\n\tgradlew.bat\n\tlocal.properties\n\tsecret_hitler_android.iml\n\tsettings.gradle.kts\n\tapp/\n\t\tbuild.gradle.kts\n\t\tsrc/\n\t\t\tdebug/\n\t\t\tmain/\n\t\t\tprofile/\n\tgradle/\n\t\twrapper/\n\t\t\tgradle-wrapper.jar\n\t\t\tgradle-wrapper.properties\nios/\n\tFlutter/\n\t\tAppFrameworkInfo.plist\n\t\tDebug.xcconfig\n\t\tflutter_export_environment.sh\n\t\tGenerated.xcconfig\n\t\tRelease.xcconfig\n\tRunner/\n\t\tAppDelegate.swift\n\t\tGeneratedPluginRegistrant.h\n\t\tGeneratedPluginRegistrant.m\n\t\tInfo.plist\n\t\tRunner-Bridging-Header.h\n\t\tAssets.xcassets/\n\t\t\tAppIcon.appiconset/\n\t\t\t...\n\t\tBase.lproj/\n\t\t\t...\n\tRunner.xcodeproj/\n\t\tproject.pbxproj\n\t\tproject.xcworkspace/\n\t\txcshareddata/\n\tRunner.xcworkspace/\n\t\tcontents.xcworkspacedata\n\t\txcshareddata/\n\tRunnerTests/\n\t\tRunnerTests.swift\nlib/\n\tmain.dart\nlinux/\n\tCMakeLists.txt\n\tflutter/\n\t\tCMakeLists.txt\n\t\tgenerated_plugin_registrant.cc\n\t\tgenerated_plugin_registrant.h\n\t\tgenerated_plugins.cmake\n\trunner/\n\t\tCMakeLists.txt\n\t\tmain.cc\n\t\tmy_application.cc\n\t\tmy_application.h\nmacos/\n\tFlutter/\n\t\tFlutter-Debug.xcconfig\n\t\tFlutter-Release.xcconfig\n\t\tGeneratedPluginRegistrant.swift\n\t\tephemeral/\n\tRunner/\n\t\tAppDelegate.swift\n\t\tDebugProfile.entitlements\n\t\tInfo.plist\n\t\tMainFlutterWindow.swift\n\t\tRelease.entitlements\n\t\tAssets.xcassets/\n\t\tBase.lproj/\n\t\tConfigs/\n\tRunner.xcodeproj/\n\t\tproject.pbxproj\n\t\tproject.xcworkspace/\n\t\txcshareddata/\n\tRunner.xcworkspace/\n\t\tcontents.xcworkspacedata\n\t\txcshareddata/\n\tRunnerTests/\n\t\tRunnerTests.swift\nweb/\n\tfavicon.png\n\tindex.html\n\tmanifest.json\n\ticons/\n\t\tIcon-192.png\n\t\tIcon-512.png\n\t\tIcon-maskable-192.png\n\t\tIcon-maskable-512.png\nwindows/\n\tCMakeLists.txt\n\tflutter/\n\t\tCMakeLists.txt\n\t\tgenerated_plugin_registrant.cc\n\t\tgenerated_plugin_registrant.h\n\t\tgenerated_plugins.cmake\n\trunner/\n\t\tCMakeLists.txt\n\t\tflutter_window.cpp\n\t\tflutter_window.h\n\t\tmain.cpp\n\t\tresource.h\n\t\trunner.exe.manifest\n\t\tRunner.rc\n\t\tutils.cpp\n\t\tutils.h\n\t\twin32_window.cpp\n\t\twin32_window.h\n\t\tresources/\n```\nThis is the state of the context at this point in the conversation. The view of the workspace structure may be truncated. You can use tools to collect more context if needed.\n</workspace_info>\n"
+            },
+            {
+              "type": 3,
+              "cacheType": "ephemeral"
+            }
+          ],
+          "toolCallRounds": [
+            {
+              "response": "I'll analyze the current Flutter project structure and create a comprehensive phase-wise development plan for the Secret Hitler application. Let me first examine the existing codebase to understand the current state. ",
+              "toolCalls": [
+                {
+                  "name": "read_file",
+                  "arguments": "{\"filePath\": \"c:\\\\Users\\\\Shalmon Anandas\\\\projects\\\\secret_hitler\\\\lib\\\\main.dart\", \"startLineNumber\": 1, \"endLineNumber\": 50}",
+                  "id": "toolu_01CHEzamtGAEC4Pd46ZGKsjp__vscode-1748955205087"
+                }
+              ],
+              "toolInputRetry": 0,
+              "id": "79ac69ab-1ba2-4b17-b4f2-47bdccf09498"
+            },
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "name": "read_file",
+                  "arguments": "{\"endLineNumber\": 50, \"filePath\": \"c:\\\\Users\\\\Shalmon Anandas\\\\projects\\\\secret_hitler\\\\pubspec.yaml\", \"startLineNumber\": 1}",
+                  "id": "toolu_01CNd2Py5iwcLSYhpher1Pim__vscode-1748955205088"
+                }
+              ],
+              "toolInputRetry": 0,
+              "id": "99d65abf-4532-41a1-aeaf-dee3608e3d97"
+            },
+            {
+              "response": "Based on the analysis of your Flutter project, I can see you have a fresh Flutter project with just the basic \"Hello World\" setup. Here's a comprehensive phase-wise development plan for creating the Secret Hitler application:\n\n# Secret Hitler Flutter App - Phase-Wise Development Plan\n\n## **Phase 1: Foundation & Architecture Setup (Weeks 1-2)**\n\n### 1.1 Project Structure & Dependencies\n- **Set up project architecture** following MVVM pattern\n- **Add core dependencies** to `pubspec.yaml`:\n  - Firebase SDK (firebase_core, cloud_firestore, firebase_auth)\n  - State management (flutter_riverpod)\n  - Navigation (go_router)\n  - UI enhancements (flutter_screenutil, google_fonts)\n  - Utilities (uuid, intl, logger)\n\n### 1.2 Directory Structure Setup\n```\nlib/\n├── core/\n│   ├── constants/\n│   ├── utils/\n│   ├── exceptions/\n│   └── theme/\n├── data/\n│   ├── models/\n│   ├── repositories/\n│   └── services/\n├── domain/\n│   ├── entities/\n│   ├── repositories/\n│   └── usecases/\n├── presentation/\n│   ├── pages/\n│   ├── widgets/\n│   └── providers/\n└── main.dart\n```\n\n### 1.3 Firebase Configuration\n- **Set up Firebase project** with Firestore and Authentication\n- **Configure platform-specific settings** (Android/iOS/Web)\n- **Initialize Firebase** in the Flutter app\n- **Design Firestore schema** structure\n\n### 1.4 Core Models Definition\n- **Game model** (game state, settings, metadata)\n- **Player model** (public profile, in-game status)\n- **User model** (authentication data, preferences)\n- **Policy models** (Liberal/Fascist policies)\n- **Role models** (Liberal, Fascist, Hitler)\n\n---\n\n## **Phase 2: Authentication & User Management (Weeks 3-4)**\n\n### 2.1 Authentication Implementation\n- **Firebase Auth setup** with multiple providers:\n  - Email/Password authentication\n  - Google Sign-In\n  - Anonymous authentication with upgrade option\n- **Authentication state management** with Riverpod\n- **User profile creation and management**\n\n### 2.2 User Interface Foundation\n- **App theme setup** (colors, typography, spacing)\n- **Responsive design system** with ScreenUtil\n- **Common widgets library** (buttons, cards, inputs)\n- **Navigation structure** with GoRouter\n\n### 2.3 Basic Screens\n- **Splash screen** with Firebase initialization\n- **Authentication screens** (login, register, forgot password)\n- **Main menu/dashboard**\n- **User profile management**\n\n---\n\n## **Phase 3: Game Lobby System (Weeks 5-6)**\n\n### 3.1 Lobby Creation & Management\n- **Create game lobby** functionality\n- **Lobby settings** (public/private, player limits, game options)\n- **Host controls** (start game, kick players, lobby settings)\n- **Unique lobby codes** for private games\n\n### 3.2 Lobby Discovery & Joining\n- **Public lobby listing** with filters and search\n- **Join lobby by code** functionality\n- **Real-time lobby updates** using Firestore listeners\n- **Player readiness system**\n\n### 3.3 Pre-Game Features\n- **In-lobby chat system**\n- **Player list management**\n- **Game rules display/tutorial**\n- **Connection status indicators**\n\n---\n\n## **Phase 4: Core Game Logic Implementation (Weeks 7-10)**\n\n### 4.1 Game Setup & Initialization\n- **Dynamic game board rendering** based on player count\n- **Role assignment algorithm** (secure, server-side via Cloud Functions)\n- **Policy deck initialization** and shuffling\n- **Game state initialization**\n\n### 4.2 Election Phase Implementation\n- **Presidential nomination** system\n- **Chancellor nomination** with eligibility rules\n- **Simultaneous voting** mechanism (\"Ja!\"/\"Nein!\")\n- **Election outcome resolution**\n- **Election Tracker** management\n\n### 4.3 Legislative Phase Implementation\n- **Policy drawing** (President draws 3, discards 1)\n- **Policy passing** (President gives 2 to Chancellor)\n- **Policy enactment** (Chancellor discards 1, enacts 1)\n- **Veto power** implementation (after 5 Fascist policies)\n\n### 4.4 Presidential Powers\n- **Policy Peek** (view top 3 policies)\n- **Investigate Loyalty** (view player's party membership)\n- **Special Election** (choose next President)\n- **Execution** (eliminate a player)\n- **Power activation** based on Fascist policy count\n\n---\n\n## **Phase 5: Game UI/UX Development (Weeks 11-13)**\n\n### 5.1 Game Board Interface\n- **Visual game board** with policy tracks\n- **Player avatars** with role indicators (President/Chancellor badges)\n- **Election Tracker** visualization\n- **Policy deck and discard pile** representations\n\n### 5.2 Interactive Game Elements\n- **Nomination interfaces** (drag-and-drop or selection)\n- **Voting interface** with clear Ja/Nein buttons\n- **Policy selection** interfaces (private screens)\n- **Presidential power** execution screens\n\n### 5.3 Information Display Systems\n- **Role revelation** screens (private viewing)\n- **Game log/history** display\n- **Player status indicators** (alive/dead, previous roles)\n- **Turn indicators** and action prompts\n\n### 5.4 Private Information Handling\n- **Secure role viewing** (tap to reveal/hide)\n- **Private policy viewing** screens\n- **Presidential power results** (private notifications)\n- **Fascist team revelation** (based on player count)\n\n---\n\n## **Phase 6: Security & Backend Integration (Weeks 14-15)**\n\n### 6.1 Firebase Security Rules\n- **Comprehensive Firestore security rules**\n- **Role-based access control** for sensitive data\n- **Prevention of unauthorized data access**\n- **Audit logging** for security monitoring\n\n### 6.2 Cloud Functions Implementation\n- **Server-side game initialization**\n- **Secure role assignment**\n- **Policy deck shuffling**\n- **Game state validation**\n- **Anti-cheat measures**\n\n### 6.3 Data Integrity\n- **Input validation** on all user actions\n- **Game state consistency** checks\n- **Error handling** and recovery mechanisms\n- **Offline handling** with proper sync\n\n---\n\n## **Phase 7: Advanced Features & Polish (Weeks 16-17)**\n\n### 7.1 Enhanced User Experience\n- **Animations and transitions**\n- **Sound effects and haptic feedback**\n- **Accessibility features**\n- **Tutorial and onboarding**\n\n### 7.2 Social Features\n- **Friends system** (optional)\n- **Game statistics** and history\n- **Achievement system**\n- **Leaderboards** (optional)\n\n### 7.3 Game Variants & Customization\n- **Different player count** support (5-10 players)\n- **Custom game rules** options\n- **Multiple language support**\n- **Themes and customization**\n\n---\n\n## **Phase 8: Testing & Quality Assurance (Weeks 18-19)**\n\n### 8.1 Comprehensive Testing\n- **Unit tests** for game logic\n- **Integration tests** for Firebase interactions\n- **Widget tests** for UI components\n- **End-to-end testing** for complete game flows\n\n### 8.2 Security Testing\n- **Security rule validation**\n- **Anti-cheat system testing**\n- **Data privacy compliance**\n- **Performance under load**\n\n### 8.3 User Testing\n- **Beta testing** with real players\n- **Usability testing** sessions\n- **Bug fixing** and optimization\n- **Performance profiling**\n\n---\n\n## **Phase 9: Deployment & Launch (Weeks 20-21)**\n\n### 9.1 Production Preparation\n- **Production Firebase** environment setup\n- **App store preparation** (metadata, screenshots)\n- **CI/CD pipeline** setup\n- **Monitoring and analytics** integration\n\n### 9.2 Platform Deployment\n- **Android Play Store** submission\n- **iOS App Store** submission\n- **Web deployment** (if applicable)\n- **Beta release** management\n\n### 9.3 Post-Launch Support\n- **Monitoring system** setup\n- **Crash reporting** integration\n- **User feedback** collection system\n- **Update mechanism** planning\n\n---\n\n## **Technical Stack Summary**\n\n### **Frontend (Flutter)**\n- **State Management**: Riverpod\n- **Navigation**: GoRouter\n- **UI**: Material Design 3, Custom widgets\n- **Responsive**: ScreenUtil\n\n### **Backend (Firebase)**\n- **Database**: Cloud Firestore\n- **Authentication**: Firebase Auth\n- **Functions**: Cloud Functions for Firebase\n- **Hosting**: Firebase Hosting (web)\n\n### **Development Tools**\n- **IDE**: VS Code with Flutter extensions\n- **Version Control**: Git\n- **Testing**: Flutter test framework\n- **CI/CD**: GitHub Actions or Firebase App Distribution\n\nThis plan provides a structured approach to developing your Secret Hitler Flutter application with proper separation of concerns, security considerations, and a focus on user experience. Each phase builds upon the previous one, ensuring a solid foundation while maintaining development momentum.",
+              "toolCalls": [],
+              "toolInputRetry": 0,
+              "id": "2782f8a9-9b77-4952-98ba-293556ab56f9"
+            }
+          ],
+          "toolCallResults": {
+            "toolu_01CHEzamtGAEC4Pd46ZGKsjp__vscode-1748955205087": {
+              "$mid": 20,
+              "content": [
+                {
+                  "$mid": 22,
+                  "value": {
+                    "node": {
+                      "type": 1,
+                      "ctor": 2,
+                      "ctorName": "vJ",
+                      "children": [
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "File: `",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\lib\\main.dart",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "`. Lines ",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "1",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": " to ",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "50",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": " (",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "21",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": " lines total):",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "\n",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 1,
+                          "ctor": 2,
+                          "ctorName": "ot",
+                          "children": [
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 23,
+                                  "text": "```dart\n",
+                                  "references": [
+                                    {
+                                      "anchor": {
+                                        "$mid": 1,
+                                        "fsPath": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\lib\\main.dart",
+                                        "_sep": 1,
+                                        "external": "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/lib/main.dart",
+                                        "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/lib/main.dart",
+                                        "scheme": "file"
+                                      },
+                                      "options": {
+                                        "isFromTool": true
+                                      }
+                                    }
+                                  ],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 23
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 22,
+                                  "text": "import 'package:flutter/material.dart';\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 22
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 21,
+                                  "text": "\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 21
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 20,
+                                  "text": "void main() {\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 20
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 19,
+                                  "text": "  runApp(const MainApp());\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 19
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 18,
+                                  "text": "}\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 18
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 17,
+                                  "text": "\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 17
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 16,
+                                  "text": "class MainApp extends StatelessWidget {\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 16
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 15,
+                                  "text": "  const MainApp({super.key});\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 15
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 14,
+                                  "text": "\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 14
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 13,
+                                  "text": "  @override\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 13
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 12,
+                                  "text": "  Widget build(BuildContext context) {\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 12
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 11,
+                                  "text": "    return const MaterialApp(\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 11
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 10,
+                                  "text": "      home: Scaffold(\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 10
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 9,
+                                  "text": "        body: Center(\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 9
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 8,
+                                  "text": "          child: Text('Hello World!'),\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 8
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 7,
+                                  "text": "        ),\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 7
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 6,
+                                  "text": "      ),\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 6
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 5,
+                                  "text": "    );\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 5
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 4,
+                                  "text": "  }\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 4
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 3,
+                                  "text": "}\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 3
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 2,
+                                  "text": "\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 2
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 23,
+                                  "text": "```",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 23
+                              },
+                              "references": []
+                            }
+                          ],
+                          "props": {},
+                          "references": []
+                        }
+                      ],
+                      "props": {},
+                      "references": []
+                    }
+                  }
+                }
+              ]
+            },
+            "toolu_01CNd2Py5iwcLSYhpher1Pim__vscode-1748955205088": {
+              "$mid": 20,
+              "content": [
+                {
+                  "$mid": 22,
+                  "value": {
+                    "node": {
+                      "type": 1,
+                      "ctor": 2,
+                      "ctorName": "vJ",
+                      "children": [
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "File: `",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\pubspec.yaml",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "`. Lines ",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "1",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": " to ",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "50",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": " (",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "20",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": " lines total):",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "\n",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 1,
+                          "ctor": 2,
+                          "ctorName": "ot",
+                          "children": [
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 22,
+                                  "text": "```yaml\n",
+                                  "references": [
+                                    {
+                                      "anchor": {
+                                        "$mid": 1,
+                                        "fsPath": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\pubspec.yaml",
+                                        "_sep": 1,
+                                        "external": "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/pubspec.yaml",
+                                        "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/pubspec.yaml",
+                                        "scheme": "file"
+                                      },
+                                      "options": {
+                                        "isFromTool": true
+                                      }
+                                    }
+                                  ],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 22
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 21,
+                                  "text": "name: secret_hitler\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 21
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 20,
+                                  "text": "description: \"A new Flutter project.\"\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 20
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 19,
+                                  "text": "publish_to: 'none'\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 19
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 18,
+                                  "text": "version: 0.1.0\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 18
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 17,
+                                  "text": "\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 17
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 16,
+                                  "text": "environment:\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 16
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 15,
+                                  "text": "  sdk: ^3.7.2\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 15
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 14,
+                                  "text": "\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 14
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 13,
+                                  "text": "dependencies:\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 13
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 12,
+                                  "text": "  flutter:\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 12
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 11,
+                                  "text": "    sdk: flutter\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 11
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 10,
+                                  "text": "\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 10
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 9,
+                                  "text": "dev_dependencies:\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 9
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 8,
+                                  "text": "  flutter_test:\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 8
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 7,
+                                  "text": "    sdk: flutter\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 7
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 6,
+                                  "text": "  flutter_lints: ^5.0.0\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 6
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 5,
+                                  "text": "\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 5
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 4,
+                                  "text": "flutter:\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 4
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 3,
+                                  "text": "  uses-material-design: true\r\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 3
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 2,
+                                  "text": "\n",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 2
+                              },
+                              "references": []
+                            },
+                            {
+                              "type": 1,
+                              "ctor": 2,
+                              "ctorName": "goe",
+                              "children": [
+                                {
+                                  "type": 2,
+                                  "priority": 22,
+                                  "text": "```",
+                                  "references": [],
+                                  "lineBreakBefore": true
+                                }
+                              ],
+                              "props": {
+                                "priority": 22
+                              },
+                              "references": []
+                            }
+                          ],
+                          "props": {},
+                          "references": []
+                        }
+                      ],
+                      "props": {},
+                      "references": []
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "modelMessageId": "d7daa4bb-d177-40c1-a24e-d075ef7d92ae",
+          "responseId": "3e86c271-fa36-481a-8f5f-2269f2c3b124",
+          "sessionId": "66bb4801-1154-415b-8a0b-13caf2d25e10",
+          "agentId": "github.copilot.editsAgent"
+        }
+      },
+      "followups": [],
+      "isCanceled": false,
+      "agent": {
+        "extensionId": {
+          "value": "GitHub.copilot-chat",
+          "_lower": "github.copilot-chat"
+        },
+        "publisherDisplayName": "GitHub",
+        "extensionPublisherId": "GitHub",
+        "extensionDisplayName": "GitHub Copilot Chat",
+        "id": "github.copilot.editsAgent",
+        "description": "Edit files in your workspace in agent mode",
+        "when": "config.chat.agent.enabled && !chatAgentModeDisallowed",
+        "metadata": {
+          "themeIcon": {
+            "id": "tools"
+          },
+          "hasFollowups": false,
+          "supportIssueReporting": false
+        },
+        "name": "agent",
+        "fullName": "GitHub Copilot",
+        "isDefault": true,
+        "locations": [
+          "panel"
+        ],
+        "modes": [
+          "agent"
+        ],
+        "slashCommands": [
+          {
+            "name": "list"
+          }
+        ],
+        "disambiguation": []
+      },
+      "contentReferences": [],
+      "codeCitations": [],
+      "timestamp": 1748955393247
+    },
+    {
+      "requestId": "request_3bb2acfe-3a42-479b-ac81-925cb5d77322",
+      "message": {
+        "parts": [
+          {
+            "range": {
+              "start": 0,
+              "endExclusive": 59
+            },
+            "editorRange": {
+              "startLineNumber": 1,
+              "startColumn": 1,
+              "endLineNumber": 1,
+              "endColumn": 60
+            },
+            "text": "create a .github/copilot-instructions.md file for this plan",
+            "kind": "text"
+          }
+        ],
+        "text": "create a .github/copilot-instructions.md file for this plan"
+      },
+      "variableData": {
+        "variables": []
+      },
+      "response": [
+        {
+          "value": "I'll create a comprehensive `.github/copilot-instructions.md` file that will help GitHub Copilot understand the project context and provide better assistance throughout the development process. ",
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "baseUri": {
+            "$mid": 1,
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/",
+            "scheme": "file"
+          }
+        },
+        {
+          "kind": "prepareToolInvocation",
+          "toolName": "copilot_createFile"
+        },
+        {
+          "kind": "toolInvocationSerialized",
+          "invocationMessage": {
+            "value": "Creating [](file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/.github/copilot-instructions.md)",
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/.github/copilot-instructions.md": {
+                "$mid": 1,
+                "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/.github/copilot-instructions.md",
+                "scheme": "file"
+              }
+            }
+          },
+          "pastTenseMessage": {
+            "value": "Created [](file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/.github/copilot-instructions.md)",
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/.github/copilot-instructions.md": {
+                "$mid": 1,
+                "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/.github/copilot-instructions.md",
+                "scheme": "file"
+              }
+            }
+          },
+          "isConfirmed": true,
+          "isComplete": true,
+          "toolCallId": "68730c32-25bb-4168-b67a-d9cc942c66c6",
+          "toolId": "copilot_createFile"
+        },
+        {
+          "kind": "textEditGroup",
+          "uri": {
+            "$mid": 1,
+            "fsPath": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\.github\\copilot-instructions.md",
+            "_sep": 1,
+            "external": "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/.github/copilot-instructions.md",
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/.github/copilot-instructions.md",
+            "scheme": "file"
+          },
+          "edits": [
+            [
+              {
+                "text": "# GitHub Copilot Instructions for Secret Hitler Flutter App",
+                "range": {
+                  "startLineNumber": 1,
+                  "startColumn": 1,
+                  "endLineNumber": 1,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 2,
+                  "startColumn": 1,
+                  "endLineNumber": 2,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Project Overview",
+                "range": {
+                  "startLineNumber": 3,
+                  "startColumn": 1,
+                  "endLineNumber": 3,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 4,
+                  "startColumn": 1,
+                  "endLineNumber": 4,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nThis is a Flutter-based mobile application for the board game \"Secret Hitler\" - a social deduction game where players are divided into Liberals and Fascists, with one player secretly being Hitler. The app provides real-time multiplayer gameplay using Firebase Firestore for synchronization.",
+                "range": {
+                  "startLineNumber": 5,
+                  "startColumn": 1,
+                  "endLineNumber": 5,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 6,
+                  "startColumn": 1,
+                  "endLineNumber": 6,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Architecture & Technical Stack",
+                "range": {
+                  "startLineNumber": 7,
+                  "startColumn": 1,
+                  "endLineNumber": 7,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 8,
+                  "startColumn": 1,
+                  "endLineNumber": 8,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Architecture Pattern",
+                "range": {
+                  "startLineNumber": 9,
+                  "startColumn": 1,
+                  "endLineNumber": 9,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **MVVM (Model-View-ViewModel)** pattern with clear separation of concerns",
+                "range": {
+                  "startLineNumber": 10,
+                  "startColumn": 1,
+                  "endLineNumber": 10,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Repository Pattern** for data layer abstraction",
+                "range": {
+                  "startLineNumber": 11,
+                  "startColumn": 1,
+                  "endLineNumber": 11,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Clean Architecture** principles with domain, data, and presentation layers",
+                "range": {
+                  "startLineNumber": 12,
+                  "startColumn": 1,
+                  "endLineNumber": 12,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 13,
+                  "startColumn": 1,
+                  "endLineNumber": 13,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Technology Stack",
+                "range": {
+                  "startLineNumber": 14,
+                  "startColumn": 1,
+                  "endLineNumber": 14,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Frontend**: Flutter (Dart)",
+                "range": {
+                  "startLineNumber": 15,
+                  "startColumn": 1,
+                  "endLineNumber": 15,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **State Management**: Riverpod",
+                "range": {
+                  "startLineNumber": 16,
+                  "startColumn": 1,
+                  "endLineNumber": 16,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Backend**: Firebase (Firestore, Auth, Cloud Functions)",
+                "range": {
+                  "startLineNumber": 17,
+                  "startColumn": 1,
+                  "endLineNumber": 17,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Navigation**: GoRouter",
+                "range": {
+                  "startLineNumber": 18,
+                  "startColumn": 1,
+                  "endLineNumber": 18,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **UI Framework**: Material Design 3",
+                "range": {
+                  "startLineNumber": 19,
+                  "startColumn": 1,
+                  "endLineNumber": 19,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 20,
+                  "startColumn": 1,
+                  "endLineNumber": 20,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Project Structure",
+                "range": {
+                  "startLineNumber": 21,
+                  "startColumn": 1,
+                  "endLineNumber": 21,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```",
+                "range": {
+                  "startLineNumber": 22,
+                  "startColumn": 1,
+                  "endLineNumber": 22,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nlib/",
+                "range": {
+                  "startLineNumber": 23,
+                  "startColumn": 1,
+                  "endLineNumber": 23,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n├── core/                    # Core utilities, constants, themes",
+                "range": {
+                  "startLineNumber": 24,
+                  "startColumn": 1,
+                  "endLineNumber": 24,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n├── data/                    # Data layer (models, repositories, services)",
+                "range": {
+                  "startLineNumber": 25,
+                  "startColumn": 1,
+                  "endLineNumber": 25,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n├── domain/                  # Domain layer (entities, use cases)",
+                "range": {
+                  "startLineNumber": 26,
+                  "startColumn": 1,
+                  "endLineNumber": 26,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n├── presentation/            # UI layer (pages, widgets, providers)",
+                "range": {
+                  "startLineNumber": 27,
+                  "startColumn": 1,
+                  "endLineNumber": 27,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n└── main.dart               # App entry point",
+                "range": {
+                  "startLineNumber": 28,
+                  "startColumn": 1,
+                  "endLineNumber": 28,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```",
+                "range": {
+                  "startLineNumber": 29,
+                  "startColumn": 1,
+                  "endLineNumber": 29,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 30,
+                  "startColumn": 1,
+                  "endLineNumber": 30,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Game Mechanics Context",
+                "range": {
+                  "startLineNumber": 31,
+                  "startColumn": 1,
+                  "endLineNumber": 31,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 32,
+                  "startColumn": 1,
+                  "endLineNumber": 32,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Core Concepts",
+                "range": {
+                  "startLineNumber": 33,
+                  "startColumn": 1,
+                  "endLineNumber": 33,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Players**: 5-10 players divided into Liberals (majority) and Fascists (minority + Hitler)",
+                "range": {
+                  "startLineNumber": 34,
+                  "startColumn": 1,
+                  "endLineNumber": 34,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Objective**: ",
+                "range": {
+                  "startLineNumber": 35,
+                  "startColumn": 1,
+                  "endLineNumber": 35,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  - Liberals: Enact 5 Liberal policies OR assassinate Hitler",
+                "range": {
+                  "startLineNumber": 36,
+                  "startColumn": 1,
+                  "endLineNumber": 36,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  - Fascists: Enact 6 Fascist policies OR elect Hitler as Chancellor after 3 Fascist policies",
+                "range": {
+                  "startLineNumber": 37,
+                  "startColumn": 1,
+                  "endLineNumber": 37,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Roles**: Liberal, Fascist, Hitler (distributed based on player count)",
+                "range": {
+                  "startLineNumber": 38,
+                  "startColumn": 1,
+                  "endLineNumber": 38,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Game Flow**: Election Phase → Legislative Phase → Presidential Powers (if applicable)",
+                "range": {
+                  "startLineNumber": 39,
+                  "startColumn": 1,
+                  "endLineNumber": 39,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 40,
+                  "startColumn": 1,
+                  "endLineNumber": 40,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Key Game Elements",
+                "range": {
+                  "startLineNumber": 41,
+                  "startColumn": 1,
+                  "endLineNumber": 41,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Policy Tracks**: Liberal (5 slots) and Fascist (6 slots)",
+                "range": {
+                  "startLineNumber": 42,
+                  "startColumn": 1,
+                  "endLineNumber": 42,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Election Tracker**: Tracks failed elections (resets after successful election)",
+                "range": {
+                  "startLineNumber": 43,
+                  "startColumn": 1,
+                  "endLineNumber": 43,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Presidential Powers**: Activated after enacting certain Fascist policies",
+                "range": {
+                  "startLineNumber": 44,
+                  "startColumn": 1,
+                  "endLineNumber": 44,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Veto Power**: Available after 5 Fascist policies are enacted",
+                "range": {
+                  "startLineNumber": 45,
+                  "startColumn": 1,
+                  "endLineNumber": 45,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 46,
+                  "startColumn": 1,
+                  "endLineNumber": 46,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Presidential Powers (by player count)",
+                "range": {
+                  "startLineNumber": 47,
+                  "startColumn": 1,
+                  "endLineNumber": 47,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Policy Peek**: President sees top 3 policies",
+                "range": {
+                  "startLineNumber": 48,
+                  "startColumn": 1,
+                  "endLineNumber": 48,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Investigate Loyalty**: President sees another player's party membership",
+                "range": {
+                  "startLineNumber": 49,
+                  "startColumn": 1,
+                  "endLineNumber": 49,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Special Election**: President chooses next Presidential candidate",
+                "range": {
+                  "startLineNumber": 50,
+                  "startColumn": 1,
+                  "endLineNumber": 50,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Execution**: President eliminates a player",
+                "range": {
+                  "startLineNumber": 51,
+                  "startColumn": 1,
+                  "endLineNumber": 51,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 52,
+                  "startColumn": 1,
+                  "endLineNumber": 52,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Data Model & Security",
+                "range": {
+                  "startLineNumber": 53,
+                  "startColumn": 1,
+                  "endLineNumber": 53,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 54,
+                  "startColumn": 1,
+                  "endLineNumber": 54,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Firebase Collections Structure",
+                "range": {
+                  "startLineNumber": 55,
+                  "startColumn": 1,
+                  "endLineNumber": 55,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```",
+                "range": {
+                  "startLineNumber": 56,
+                  "startColumn": 1,
+                  "endLineNumber": 56,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nusers/                      # Public user profiles",
+                "range": {
+                  "startLineNumber": 57,
+                  "startColumn": 1,
+                  "endLineNumber": 57,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\ngames/                      # Public game state",
+                "range": {
+                  "startLineNumber": 58,
+                  "startColumn": 1,
+                  "endLineNumber": 58,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  ├── players/             # Private player data (roles, policies)",
+                "range": {
+                  "startLineNumber": 59,
+                  "startColumn": 1,
+                  "endLineNumber": 59,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  ├── policyDeck/          # Private deck state",
+                "range": {
+                  "startLineNumber": 60,
+                  "startColumn": 1,
+                  "endLineNumber": 60,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  ├── discardPile/         # Public discard pile",
+                "range": {
+                  "startLineNumber": 61,
+                  "startColumn": 1,
+                  "endLineNumber": 61,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  └── chat/                # Optional chat messages",
+                "range": {
+                  "startLineNumber": 62,
+                  "startColumn": 1,
+                  "endLineNumber": 62,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```",
+                "range": {
+                  "startLineNumber": 63,
+                  "startColumn": 1,
+                  "endLineNumber": 63,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 64,
+                  "startColumn": 1,
+                  "endLineNumber": 64,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Security Considerations",
+                "range": {
+                  "startLineNumber": 65,
+                  "startColumn": 1,
+                  "endLineNumber": 65,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Hidden Information**: Roles, policy hands, deck order must be secure",
+                "range": {
+                  "startLineNumber": 66,
+                  "startColumn": 1,
+                  "endLineNumber": 66,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Server-side Logic**: Critical operations via Cloud Functions",
+                "range": {
+                  "startLineNumber": 67,
+                  "startColumn": 1,
+                  "endLineNumber": 67,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Access Control**: Strict Firestore security rules",
+                "range": {
+                  "startLineNumber": 68,
+                  "startColumn": 1,
+                  "endLineNumber": 68,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Anti-cheat**: Validate all actions server-side",
+                "range": {
+                  "startLineNumber": 69,
+                  "startColumn": 1,
+                  "endLineNumber": 69,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 70,
+                  "startColumn": 1,
+                  "endLineNumber": 70,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Development Guidelines",
+                "range": {
+                  "startLineNumber": 71,
+                  "startColumn": 1,
+                  "endLineNumber": 71,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 72,
+                  "startColumn": 1,
+                  "endLineNumber": 72,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Code Style & Conventions",
+                "range": {
+                  "startLineNumber": 73,
+                  "startColumn": 1,
+                  "endLineNumber": 73,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Follow Flutter/Dart style guide",
+                "range": {
+                  "startLineNumber": 74,
+                  "startColumn": 1,
+                  "endLineNumber": 74,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use meaningful variable and function names",
+                "range": {
+                  "startLineNumber": 75,
+                  "startColumn": 1,
+                  "endLineNumber": 75,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement proper error handling",
+                "range": {
+                  "startLineNumber": 76,
+                  "startColumn": 1,
+                  "endLineNumber": 76,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Add comprehensive documentation",
+                "range": {
+                  "startLineNumber": 77,
+                  "startColumn": 1,
+                  "endLineNumber": 77,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Write unit tests for business logic",
+                "range": {
+                  "startLineNumber": 78,
+                  "startColumn": 1,
+                  "endLineNumber": 78,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 79,
+                  "startColumn": 1,
+                  "endLineNumber": 79,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### State Management with Riverpod",
+                "range": {
+                  "startLineNumber": 80,
+                  "startColumn": 1,
+                  "endLineNumber": 80,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use `StateProvider` for simple state",
+                "range": {
+                  "startLineNumber": 81,
+                  "startColumn": 1,
+                  "endLineNumber": 81,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use `StateNotifierProvider` for complex state with logic",
+                "range": {
+                  "startLineNumber": 82,
+                  "startColumn": 1,
+                  "endLineNumber": 82,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use `StreamProvider` for Firebase real-time data",
+                "range": {
+                  "startLineNumber": 83,
+                  "startColumn": 1,
+                  "endLineNumber": 83,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement proper disposal and error handling",
+                "range": {
+                  "startLineNumber": 84,
+                  "startColumn": 1,
+                  "endLineNumber": 84,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 85,
+                  "startColumn": 1,
+                  "endLineNumber": 85,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Firebase Integration",
+                "range": {
+                  "startLineNumber": 86,
+                  "startColumn": 1,
+                  "endLineNumber": 86,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use Firestore `snapshots()` for real-time updates",
+                "range": {
+                  "startLineNumber": 87,
+                  "startColumn": 1,
+                  "endLineNumber": 87,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement offline persistence",
+                "range": {
+                  "startLineNumber": 88,
+                  "startColumn": 1,
+                  "endLineNumber": 88,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use transactions for atomic operations",
+                "range": {
+                  "startLineNumber": 89,
+                  "startColumn": 1,
+                  "endLineNumber": 89,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Handle connection states properly",
+                "range": {
+                  "startLineNumber": 90,
+                  "startColumn": 1,
+                  "endLineNumber": 90,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 91,
+                  "startColumn": 1,
+                  "endLineNumber": 91,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### UI/UX Principles",
+                "range": {
+                  "startLineNumber": 92,
+                  "startColumn": 1,
+                  "endLineNumber": 92,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Clarity**: Clear visual feedback for all actions",
+                "range": {
+                  "startLineNumber": 93,
+                  "startColumn": 1,
+                  "endLineNumber": 93,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Responsiveness**: Support various screen sizes",
+                "range": {
+                  "startLineNumber": 94,
+                  "startColumn": 1,
+                  "endLineNumber": 94,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Accessibility**: Proper semantic labels and contrast",
+                "range": {
+                  "startLineNumber": 95,
+                  "startColumn": 1,
+                  "endLineNumber": 95,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- **Privacy**: Secure handling of hidden information (roles, policies)",
+                "range": {
+                  "startLineNumber": 96,
+                  "startColumn": 1,
+                  "endLineNumber": 96,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 97,
+                  "startColumn": 1,
+                  "endLineNumber": 97,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Phase-wise Development Context",
+                "range": {
+                  "startLineNumber": 98,
+                  "startColumn": 1,
+                  "endLineNumber": 98,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 99,
+                  "startColumn": 1,
+                  "endLineNumber": 99,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Current Phase: Foundation Setup (Weeks 1-2)",
+                "range": {
+                  "startLineNumber": 100,
+                  "startColumn": 1,
+                  "endLineNumber": 100,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nFocus on establishing core architecture, dependencies, and basic project structure.",
+                "range": {
+                  "startLineNumber": 101,
+                  "startColumn": 1,
+                  "endLineNumber": 101,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 102,
+                  "startColumn": 1,
+                  "endLineNumber": 102,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Key Implementation Areas",
+                "range": {
+                  "startLineNumber": 103,
+                  "startColumn": 1,
+                  "endLineNumber": 103,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n1. **Authentication System** - Multi-provider auth with upgrade paths",
+                "range": {
+                  "startLineNumber": 104,
+                  "startColumn": 1,
+                  "endLineNumber": 104,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n2. **Lobby System** - Creation, discovery, joining, and management",
+                "range": {
+                  "startLineNumber": 105,
+                  "startColumn": 1,
+                  "endLineNumber": 105,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n3. **Core Game Logic** - Election and legislative phases",
+                "range": {
+                  "startLineNumber": 106,
+                  "startColumn": 1,
+                  "endLineNumber": 106,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n4. **Real-time Synchronization** - Firebase Firestore integration",
+                "range": {
+                  "startLineNumber": 107,
+                  "startColumn": 1,
+                  "endLineNumber": 107,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n5. **Security Implementation** - Rules and Cloud Functions",
+                "range": {
+                  "startLineNumber": 108,
+                  "startColumn": 1,
+                  "endLineNumber": 108,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n6. **UI/UX Polish** - Responsive design and animations",
+                "range": {
+                  "startLineNumber": 109,
+                  "startColumn": 1,
+                  "endLineNumber": 109,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 110,
+                  "startColumn": 1,
+                  "endLineNumber": 110,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Specific Coding Guidelines",
+                "range": {
+                  "startLineNumber": 111,
+                  "startColumn": 1,
+                  "endLineNumber": 111,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 112,
+                  "startColumn": 1,
+                  "endLineNumber": 112,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### For Game Logic",
+                "range": {
+                  "startLineNumber": 113,
+                  "startColumn": 1,
+                  "endLineNumber": 113,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Always validate game state before actions",
+                "range": {
+                  "startLineNumber": 114,
+                  "startColumn": 1,
+                  "endLineNumber": 114,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use enums for game phases, roles, and policy types",
+                "range": {
+                  "startLineNumber": 115,
+                  "startColumn": 1,
+                  "endLineNumber": 115,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement immutable data structures where possible",
+                "range": {
+                  "startLineNumber": 116,
+                  "startColumn": 1,
+                  "endLineNumber": 116,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Handle all edge cases (disconnections, invalid states)",
+                "range": {
+                  "startLineNumber": 117,
+                  "startColumn": 1,
+                  "endLineNumber": 117,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 118,
+                  "startColumn": 1,
+                  "endLineNumber": 118,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### For UI Components",
+                "range": {
+                  "startLineNumber": 119,
+                  "startColumn": 1,
+                  "endLineNumber": 119,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Create reusable widgets for common game elements",
+                "range": {
+                  "startLineNumber": 120,
+                  "startColumn": 1,
+                  "endLineNumber": 120,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement proper loading and error states",
+                "range": {
+                  "startLineNumber": 121,
+                  "startColumn": 1,
+                  "endLineNumber": 121,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use consistent spacing and typography",
+                "range": {
+                  "startLineNumber": 122,
+                  "startColumn": 1,
+                  "endLineNumber": 122,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Support both light and dark themes",
+                "range": {
+                  "startLineNumber": 123,
+                  "startColumn": 1,
+                  "endLineNumber": 123,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 124,
+                  "startColumn": 1,
+                  "endLineNumber": 124,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### For Firebase Operations",
+                "range": {
+                  "startLineNumber": 125,
+                  "startColumn": 1,
+                  "endLineNumber": 125,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Always handle errors gracefully",
+                "range": {
+                  "startLineNumber": 126,
+                  "startColumn": 1,
+                  "endLineNumber": 126,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use proper typing for Firestore documents",
+                "range": {
+                  "startLineNumber": 127,
+                  "startColumn": 1,
+                  "endLineNumber": 127,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement retry logic for failed operations",
+                "range": {
+                  "startLineNumber": 128,
+                  "startColumn": 1,
+                  "endLineNumber": 128,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Cache data appropriately for offline use",
+                "range": {
+                  "startLineNumber": 129,
+                  "startColumn": 1,
+                  "endLineNumber": 129,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 130,
+                  "startColumn": 1,
+                  "endLineNumber": 130,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### For Security",
+                "range": {
+                  "startLineNumber": 131,
+                  "startColumn": 1,
+                  "endLineNumber": 131,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Never trust client-side data for critical operations",
+                "range": {
+                  "startLineNumber": 132,
+                  "startColumn": 1,
+                  "endLineNumber": 132,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Validate all inputs server-side",
+                "range": {
+                  "startLineNumber": 133,
+                  "startColumn": 1,
+                  "endLineNumber": 133,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use proper authentication checks",
+                "range": {
+                  "startLineNumber": 134,
+                  "startColumn": 1,
+                  "endLineNumber": 134,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement audit logging for sensitive actions",
+                "range": {
+                  "startLineNumber": 135,
+                  "startColumn": 1,
+                  "endLineNumber": 135,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 136,
+                  "startColumn": 1,
+                  "endLineNumber": 136,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Testing Strategy",
+                "range": {
+                  "startLineNumber": 137,
+                  "startColumn": 1,
+                  "endLineNumber": 137,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 138,
+                  "startColumn": 1,
+                  "endLineNumber": 138,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Unit Tests",
+                "range": {
+                  "startLineNumber": 139,
+                  "startColumn": 1,
+                  "endLineNumber": 139,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Game logic validation",
+                "range": {
+                  "startLineNumber": 140,
+                  "startColumn": 1,
+                  "endLineNumber": 140,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Model serialization/deserialization",
+                "range": {
+                  "startLineNumber": 141,
+                  "startColumn": 1,
+                  "endLineNumber": 141,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Utility functions",
+                "range": {
+                  "startLineNumber": 142,
+                  "startColumn": 1,
+                  "endLineNumber": 142,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- State management providers",
+                "range": {
+                  "startLineNumber": 143,
+                  "startColumn": 1,
+                  "endLineNumber": 143,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 144,
+                  "startColumn": 1,
+                  "endLineNumber": 144,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Integration Tests",
+                "range": {
+                  "startLineNumber": 145,
+                  "startColumn": 1,
+                  "endLineNumber": 145,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Firebase operations",
+                "range": {
+                  "startLineNumber": 146,
+                  "startColumn": 1,
+                  "endLineNumber": 146,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Authentication flows",
+                "range": {
+                  "startLineNumber": 147,
+                  "startColumn": 1,
+                  "endLineNumber": 147,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Real-time data synchronization",
+                "range": {
+                  "startLineNumber": 148,
+                  "startColumn": 1,
+                  "endLineNumber": 148,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- End-to-end game scenarios",
+                "range": {
+                  "startLineNumber": 149,
+                  "startColumn": 1,
+                  "endLineNumber": 149,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 150,
+                  "startColumn": 1,
+                  "endLineNumber": 150,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Widget Tests",
+                "range": {
+                  "startLineNumber": 151,
+                  "startColumn": 1,
+                  "endLineNumber": 151,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- UI component behavior",
+                "range": {
+                  "startLineNumber": 152,
+                  "startColumn": 1,
+                  "endLineNumber": 152,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- User interaction flows",
+                "range": {
+                  "startLineNumber": 153,
+                  "startColumn": 1,
+                  "endLineNumber": 153,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Responsive design",
+                "range": {
+                  "startLineNumber": 154,
+                  "startColumn": 1,
+                  "endLineNumber": 154,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Accessibility features",
+                "range": {
+                  "startLineNumber": 155,
+                  "startColumn": 1,
+                  "endLineNumber": 155,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 156,
+                  "startColumn": 1,
+                  "endLineNumber": 156,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Performance Considerations",
+                "range": {
+                  "startLineNumber": 157,
+                  "startColumn": 1,
+                  "endLineNumber": 157,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 158,
+                  "startColumn": 1,
+                  "endLineNumber": 158,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Minimize Firestore reads through efficient queries",
+                "range": {
+                  "startLineNumber": 159,
+                  "startColumn": 1,
+                  "endLineNumber": 159,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use pagination for large datasets",
+                "range": {
+                  "startLineNumber": 160,
+                  "startColumn": 1,
+                  "endLineNumber": 160,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement proper caching strategies",
+                "range": {
+                  "startLineNumber": 161,
+                  "startColumn": 1,
+                  "endLineNumber": 161,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Optimize widget rebuilds with Riverpod",
+                "range": {
+                  "startLineNumber": 162,
+                  "startColumn": 1,
+                  "endLineNumber": 162,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Handle memory management for real-time listeners",
+                "range": {
+                  "startLineNumber": 163,
+                  "startColumn": 1,
+                  "endLineNumber": 163,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 164,
+                  "startColumn": 1,
+                  "endLineNumber": 164,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Accessibility & Internationalization",
+                "range": {
+                  "startLineNumber": 165,
+                  "startColumn": 1,
+                  "endLineNumber": 165,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 166,
+                  "startColumn": 1,
+                  "endLineNumber": 166,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Support screen readers and TalkBack",
+                "range": {
+                  "startLineNumber": 167,
+                  "startColumn": 1,
+                  "endLineNumber": 167,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Provide proper semantic labels",
+                "range": {
+                  "startLineNumber": 168,
+                  "startColumn": 1,
+                  "endLineNumber": 168,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Ensure sufficient color contrast",
+                "range": {
+                  "startLineNumber": 169,
+                  "startColumn": 1,
+                  "endLineNumber": 169,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Support multiple languages (future enhancement)",
+                "range": {
+                  "startLineNumber": 170,
+                  "startColumn": 1,
+                  "endLineNumber": 170,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Handle RTL text direction",
+                "range": {
+                  "startLineNumber": 171,
+                  "startColumn": 1,
+                  "endLineNumber": 171,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 172,
+                  "startColumn": 1,
+                  "endLineNumber": 172,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Common Patterns & Best Practices",
+                "range": {
+                  "startLineNumber": 173,
+                  "startColumn": 1,
+                  "endLineNumber": 173,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 174,
+                  "startColumn": 1,
+                  "endLineNumber": 174,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Error Handling",
+                "range": {
+                  "startLineNumber": 175,
+                  "startColumn": 1,
+                  "endLineNumber": 175,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```dart",
+                "range": {
+                  "startLineNumber": 176,
+                  "startColumn": 1,
+                  "endLineNumber": 176,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\ntry {",
+                "range": {
+                  "startLineNumber": 177,
+                  "startColumn": 1,
+                  "endLineNumber": 177,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  await gameRepository.performAction();",
+                "range": {
+                  "startLineNumber": 178,
+                  "startColumn": 1,
+                  "endLineNumber": 178,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n} on FirebaseException catch (e) {",
+                "range": {
+                  "startLineNumber": 179,
+                  "startColumn": 1,
+                  "endLineNumber": 179,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  // Handle Firebase-specific errors",
+                "range": {
+                  "startLineNumber": 180,
+                  "startColumn": 1,
+                  "endLineNumber": 180,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n} on GameException catch (e) {",
+                "range": {
+                  "startLineNumber": 181,
+                  "startColumn": 1,
+                  "endLineNumber": 181,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  // Handle game-specific errors",
+                "range": {
+                  "startLineNumber": 182,
+                  "startColumn": 1,
+                  "endLineNumber": 182,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n} catch (e) {",
+                "range": {
+                  "startLineNumber": 183,
+                  "startColumn": 1,
+                  "endLineNumber": 183,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  // Handle unexpected errors",
+                "range": {
+                  "startLineNumber": 184,
+                  "startColumn": 1,
+                  "endLineNumber": 184,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n}",
+                "range": {
+                  "startLineNumber": 185,
+                  "startColumn": 1,
+                  "endLineNumber": 185,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```",
+                "range": {
+                  "startLineNumber": 186,
+                  "startColumn": 1,
+                  "endLineNumber": 186,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 187,
+                  "startColumn": 1,
+                  "endLineNumber": 187,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### State Management",
+                "range": {
+                  "startLineNumber": 188,
+                  "startColumn": 1,
+                  "endLineNumber": 188,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```dart",
+                "range": {
+                  "startLineNumber": 189,
+                  "startColumn": 1,
+                  "endLineNumber": 189,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nfinal gameStateProvider = StateNotifierProvider<GameStateNotifier, GameState>((ref) {",
+                "range": {
+                  "startLineNumber": 190,
+                  "startColumn": 1,
+                  "endLineNumber": 190,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  return GameStateNotifier(ref.read(gameRepositoryProvider));",
+                "range": {
+                  "startLineNumber": 191,
+                  "startColumn": 1,
+                  "endLineNumber": 191,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n});",
+                "range": {
+                  "startLineNumber": 192,
+                  "startColumn": 1,
+                  "endLineNumber": 192,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```",
+                "range": {
+                  "startLineNumber": 193,
+                  "startColumn": 1,
+                  "endLineNumber": 193,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 194,
+                  "startColumn": 1,
+                  "endLineNumber": 194,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n### Real-time Data",
+                "range": {
+                  "startLineNumber": 195,
+                  "startColumn": 1,
+                  "endLineNumber": 195,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```dart",
+                "range": {
+                  "startLineNumber": 196,
+                  "startColumn": 1,
+                  "endLineNumber": 196,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nfinal gameStreamProvider = StreamProvider.family<Game, String>((ref, gameId) {",
+                "range": {
+                  "startLineNumber": 197,
+                  "startColumn": 1,
+                  "endLineNumber": 197,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n  return ref.read(gameRepositoryProvider).watchGame(gameId);",
+                "range": {
+                  "startLineNumber": 198,
+                  "startColumn": 1,
+                  "endLineNumber": 198,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n});",
+                "range": {
+                  "startLineNumber": 199,
+                  "startColumn": 1,
+                  "endLineNumber": 199,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n```",
+                "range": {
+                  "startLineNumber": 200,
+                  "startColumn": 1,
+                  "endLineNumber": 200,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 201,
+                  "startColumn": 1,
+                  "endLineNumber": 201,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Security Rules Context",
+                "range": {
+                  "startLineNumber": 202,
+                  "startColumn": 1,
+                  "endLineNumber": 202,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 203,
+                  "startColumn": 1,
+                  "endLineNumber": 203,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nRemember that Firestore security rules should:",
+                "range": {
+                  "startLineNumber": 204,
+                  "startColumn": 1,
+                  "endLineNumber": 204,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Prevent access to hidden game information",
+                "range": {
+                  "startLineNumber": 205,
+                  "startColumn": 1,
+                  "endLineNumber": 205,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Validate game state transitions",
+                "range": {
+                  "startLineNumber": 206,
+                  "startColumn": 1,
+                  "endLineNumber": 206,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Ensure only authorized players can modify game data",
+                "range": {
+                  "startLineNumber": 207,
+                  "startColumn": 1,
+                  "endLineNumber": 207,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Log suspicious activities",
+                "range": {
+                  "startLineNumber": 208,
+                  "startColumn": 1,
+                  "endLineNumber": 208,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 209,
+                  "startColumn": 1,
+                  "endLineNumber": 209,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n## Deployment & CI/CD",
+                "range": {
+                  "startLineNumber": 210,
+                  "startColumn": 1,
+                  "endLineNumber": 210,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 211,
+                  "startColumn": 1,
+                  "endLineNumber": 211,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use Firebase App Distribution for beta testing",
+                "range": {
+                  "startLineNumber": 212,
+                  "startColumn": 1,
+                  "endLineNumber": 212,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Implement automated testing in CI pipeline",
+                "range": {
+                  "startLineNumber": 213,
+                  "startColumn": 1,
+                  "endLineNumber": 213,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Use environment-specific Firebase projects",
+                "range": {
+                  "startLineNumber": 214,
+                  "startColumn": 1,
+                  "endLineNumber": 214,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n- Monitor app performance and crashes post-deployment",
+                "range": {
+                  "startLineNumber": 215,
+                  "startColumn": 1,
+                  "endLineNumber": 215,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 216,
+                  "startColumn": 1,
+                  "endLineNumber": 216,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n---",
+                "range": {
+                  "startLineNumber": 217,
+                  "startColumn": 1,
+                  "endLineNumber": 217,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 218,
+                  "startColumn": 1,
+                  "endLineNumber": 218,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nWhen providing code suggestions, always consider:",
+                "range": {
+                  "startLineNumber": 219,
+                  "startColumn": 1,
+                  "endLineNumber": 219,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n1. Game rule compliance and edge cases",
+                "range": {
+                  "startLineNumber": 220,
+                  "startColumn": 1,
+                  "endLineNumber": 220,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n2. Security implications of the implementation",
+                "range": {
+                  "startLineNumber": 221,
+                  "startColumn": 1,
+                  "endLineNumber": 221,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n3. Real-time synchronization requirements",
+                "range": {
+                  "startLineNumber": 222,
+                  "startColumn": 1,
+                  "endLineNumber": 222,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n4. User experience and accessibility",
+                "range": {
+                  "startLineNumber": 223,
+                  "startColumn": 1,
+                  "endLineNumber": 223,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n5. Performance impact on mobile devices",
+                "range": {
+                  "startLineNumber": 224,
+                  "startColumn": 1,
+                  "endLineNumber": 224,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n6. Proper error handling and recovery",
+                "range": {
+                  "startLineNumber": 225,
+                  "startColumn": 1,
+                  "endLineNumber": 225,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n7. Testing implications and coverage",
+                "range": {
+                  "startLineNumber": 226,
+                  "startColumn": 1,
+                  "endLineNumber": 226,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 227,
+                  "startColumn": 1,
+                  "endLineNumber": 227,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\nThis project prioritizes security, user experience, and maintainability while delivering a faithful digital adaptation of the Secret Hitler board game.",
+                "range": {
+                  "startLineNumber": 228,
+                  "startColumn": 1,
+                  "endLineNumber": 228,
+                  "endColumn": 1
+                }
+              }
+            ],
+            [
+              {
+                "text": "\n",
+                "range": {
+                  "startLineNumber": 229,
+                  "startColumn": 1,
+                  "endLineNumber": 229,
+                  "endColumn": 1
+                }
+              }
+            ],
+            []
+          ],
+          "done": true
+        },
+        {
+          "value": "I've created a comprehensive ",
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "baseUri": {
+            "$mid": 1,
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/",
+            "scheme": "file"
+          },
+          "uris": {}
+        },
+        {
+          "kind": "inlineReference",
+          "inlineReference": {
+            "$mid": 1,
+            "fsPath": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\.github\\copilot-instructions.md",
+            "_sep": 1,
+            "external": "file:///c%3A/Users/Shalmon%20Anandas/projects/secret_hitler/.github/copilot-instructions.md",
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/.github/copilot-instructions.md",
+            "scheme": "file"
+          }
+        },
+        {
+          "value": " file that will help GitHub Copilot understand your Secret Hitler Flutter app project. This file includes:\n\n## Key Sections Covered:\n\n1. **Project Overview** - Clear description of the Secret Hitler game and app purpose\n2. **Architecture & Technical Stack** - MVVM pattern, Flutter, Firebase, Riverpod details\n3. **Game Mechanics Context** - Detailed explanation of Secret Hitler rules and flow\n4. **Data Model & Security** - Firebase structure and security considerations\n5. **Development Guidelines** - Code style, conventions, and best practices\n6. **Phase-wise Development Context** - Current development phase awareness\n7. **Specific Coding Guidelines** - Targeted advice for different areas of development\n8. **Testing Strategy** - Comprehensive testing approach\n9. **Performance & Accessibility** - Important considerations for mobile apps\n10. **Common Patterns** - Code examples for typical scenarios\n\n## Benefits for Development:\n\n- **Context-Aware Suggestions**: Copilot will understand the game rules and provide relevant code\n- **Security-First Approach**: Emphasis on protecting hidden information and preventing cheating\n- **Architecture Compliance**: Suggestions will follow MVVM and clean architecture patterns\n- **Firebase Integration**: Better suggestions for real-time multiplayer functionality\n- **Game-Specific Logic**: Understanding of election phases, presidential powers, and win conditions\n\nThis file will significantly improve the quality and relevance of GitHub Copilot's suggestions throughout your development process, ensuring that generated code aligns with your project's architecture, security requirements, and game mechanics.",
+          "supportThemeIcons": false,
+          "supportHtml": false,
+          "baseUri": {
+            "$mid": 1,
+            "path": "/c:/Users/Shalmon Anandas/projects/secret_hitler/",
+            "scheme": "file"
+          }
+        }
+      ],
+      "responseId": "response_d12bafe6-eeab-4329-967b-397681d51570",
+      "result": {
+        "timings": {
+          "firstProgress": 2109,
+          "totalElapsed": 55124
+        },
+        "metadata": {
+          "codeBlocks": [],
+          "renderedUserMessage": [
+            {
+              "type": 1,
+              "text": "<context>\nThe current date is June 3, 2025.\n</context>\n<reminder>\nWhen using the insert_edit_into_file tool, avoid repeating existing code, instead use a line comment with \\`...existing code...\\` to represent regions of unchanged code.\nWhen using the replace_string_in_file tool, include 3-5 lines of unchanged code before and after the string you want to replace, to make it unambiguous which part of the file should be edited.\n</reminder>\n<userRequest>\ncreate a .github/copilot-instructions.md file for this plan\n</userRequest>\n"
+            },
+            {
+              "type": 3,
+              "cacheType": "ephemeral"
+            }
+          ],
+          "toolCallRounds": [
+            {
+              "response": "I'll create a comprehensive `.github/copilot-instructions.md` file that will help GitHub Copilot understand the project context and provide better assistance throughout the development process. ",
+              "toolCalls": [
+                {
+                  "name": "create_file",
+                  "arguments": "{\"filePath\": \"c:\\\\Users\\\\Shalmon Anandas\\\\projects\\\\secret_hitler\\\\.github\\\\copilot-instructions.md\", \"content\": \"# GitHub Copilot Instructions for Secret Hitler Flutter App\\n\\n## Project Overview\\n\\nThis is a Flutter-based mobile application for the board game \\\"Secret Hitler\\\" - a social deduction game where players are divided into Liberals and Fascists, with one player secretly being Hitler. The app provides real-time multiplayer gameplay using Firebase Firestore for synchronization.\\n\\n## Architecture & Technical Stack\\n\\n### Architecture Pattern\\n- **MVVM (Model-View-ViewModel)** pattern with clear separation of concerns\\n- **Repository Pattern** for data layer abstraction\\n- **Clean Architecture** principles with domain, data, and presentation layers\\n\\n### Technology Stack\\n- **Frontend**: Flutter (Dart)\\n- **State Management**: Riverpod\\n- **Backend**: Firebase (Firestore, Auth, Cloud Functions)\\n- **Navigation**: GoRouter\\n- **UI Framework**: Material Design 3\\n\\n### Project Structure\\n```\\nlib/\\n├── core/                    # Core utilities, constants, themes\\n├── data/                    # Data layer (models, repositories, services)\\n├── domain/                  # Domain layer (entities, use cases)\\n├── presentation/            # UI layer (pages, widgets, providers)\\n└── main.dart               # App entry point\\n```\\n\\n## Game Mechanics Context\\n\\n### Core Concepts\\n- **Players**: 5-10 players divided into Liberals (majority) and Fascists (minority + Hitler)\\n- **Objective**: \\n  - Liberals: Enact 5 Liberal policies OR assassinate Hitler\\n  - Fascists: Enact 6 Fascist policies OR elect Hitler as Chancellor after 3 Fascist policies\\n- **Roles**: Liberal, Fascist, Hitler (distributed based on player count)\\n- **Game Flow**: Election Phase → Legislative Phase → Presidential Powers (if applicable)\\n\\n### Key Game Elements\\n- **Policy Tracks**: Liberal (5 slots) and Fascist (6 slots)\\n- **Election Tracker**: Tracks failed elections (resets after successful election)\\n- **Presidential Powers**: Activated after enacting certain Fascist policies\\n- **Veto Power**: Available after 5 Fascist policies are enacted\\n\\n### Presidential Powers (by player count)\\n- **Policy Peek**: President sees top 3 policies\\n- **Investigate Loyalty**: President sees another player's party membership\\n- **Special Election**: President chooses next Presidential candidate\\n- **Execution**: President eliminates a player\\n\\n## Data Model & Security\\n\\n### Firebase Collections Structure\\n```\\nusers/                      # Public user profiles\\ngames/                      # Public game state\\n  ├── players/             # Private player data (roles, policies)\\n  ├── policyDeck/          # Private deck state\\n  ├── discardPile/         # Public discard pile\\n  └── chat/                # Optional chat messages\\n```\\n\\n### Security Considerations\\n- **Hidden Information**: Roles, policy hands, deck order must be secure\\n- **Server-side Logic**: Critical operations via Cloud Functions\\n- **Access Control**: Strict Firestore security rules\\n- **Anti-cheat**: Validate all actions server-side\\n\\n## Development Guidelines\\n\\n### Code Style & Conventions\\n- Follow Flutter/Dart style guide\\n- Use meaningful variable and function names\\n- Implement proper error handling\\n- Add comprehensive documentation\\n- Write unit tests for business logic\\n\\n### State Management with Riverpod\\n- Use `StateProvider` for simple state\\n- Use `StateNotifierProvider` for complex state with logic\\n- Use `StreamProvider` for Firebase real-time data\\n- Implement proper disposal and error handling\\n\\n### Firebase Integration\\n- Use Firestore `snapshots()` for real-time updates\\n- Implement offline persistence\\n- Use transactions for atomic operations\\n- Handle connection states properly\\n\\n### UI/UX Principles\\n- **Clarity**: Clear visual feedback for all actions\\n- **Responsiveness**: Support various screen sizes\\n- **Accessibility**: Proper semantic labels and contrast\\n- **Privacy**: Secure handling of hidden information (roles, policies)\\n\\n## Phase-wise Development Context\\n\\n### Current Phase: Foundation Setup (Weeks 1-2)\\nFocus on establishing core architecture, dependencies, and basic project structure.\\n\\n### Key Implementation Areas\\n1. **Authentication System** - Multi-provider auth with upgrade paths\\n2. **Lobby System** - Creation, discovery, joining, and management\\n3. **Core Game Logic** - Election and legislative phases\\n4. **Real-time Synchronization** - Firebase Firestore integration\\n5. **Security Implementation** - Rules and Cloud Functions\\n6. **UI/UX Polish** - Responsive design and animations\\n\\n## Specific Coding Guidelines\\n\\n### For Game Logic\\n- Always validate game state before actions\\n- Use enums for game phases, roles, and policy types\\n- Implement immutable data structures where possible\\n- Handle all edge cases (disconnections, invalid states)\\n\\n### For UI Components\\n- Create reusable widgets for common game elements\\n- Implement proper loading and error states\\n- Use consistent spacing and typography\\n- Support both light and dark themes\\n\\n### For Firebase Operations\\n- Always handle errors gracefully\\n- Use proper typing for Firestore documents\\n- Implement retry logic for failed operations\\n- Cache data appropriately for offline use\\n\\n### For Security\\n- Never trust client-side data for critical operations\\n- Validate all inputs server-side\\n- Use proper authentication checks\\n- Implement audit logging for sensitive actions\\n\\n## Testing Strategy\\n\\n### Unit Tests\\n- Game logic validation\\n- Model serialization/deserialization\\n- Utility functions\\n- State management providers\\n\\n### Integration Tests\\n- Firebase operations\\n- Authentication flows\\n- Real-time data synchronization\\n- End-to-end game scenarios\\n\\n### Widget Tests\\n- UI component behavior\\n- User interaction flows\\n- Responsive design\\n- Accessibility features\\n\\n## Performance Considerations\\n\\n- Minimize Firestore reads through efficient queries\\n- Use pagination for large datasets\\n- Implement proper caching strategies\\n- Optimize widget rebuilds with Riverpod\\n- Handle memory management for real-time listeners\\n\\n## Accessibility & Internationalization\\n\\n- Support screen readers and TalkBack\\n- Provide proper semantic labels\\n- Ensure sufficient color contrast\\n- Support multiple languages (future enhancement)\\n- Handle RTL text direction\\n\\n## Common Patterns & Best Practices\\n\\n### Error Handling\\n```dart\\ntry {\\n  await gameRepository.performAction();\\n} on FirebaseException catch (e) {\\n  // Handle Firebase-specific errors\\n} on GameException catch (e) {\\n  // Handle game-specific errors\\n} catch (e) {\\n  // Handle unexpected errors\\n}\\n```\\n\\n### State Management\\n```dart\\nfinal gameStateProvider = StateNotifierProvider<GameStateNotifier, GameState>((ref) {\\n  return GameStateNotifier(ref.read(gameRepositoryProvider));\\n});\\n```\\n\\n### Real-time Data\\n```dart\\nfinal gameStreamProvider = StreamProvider.family<Game, String>((ref, gameId) {\\n  return ref.read(gameRepositoryProvider).watchGame(gameId);\\n});\\n```\\n\\n## Security Rules Context\\n\\nRemember that Firestore security rules should:\\n- Prevent access to hidden game information\\n- Validate game state transitions\\n- Ensure only authorized players can modify game data\\n- Log suspicious activities\\n\\n## Deployment & CI/CD\\n\\n- Use Firebase App Distribution for beta testing\\n- Implement automated testing in CI pipeline\\n- Use environment-specific Firebase projects\\n- Monitor app performance and crashes post-deployment\\n\\n---\\n\\nWhen providing code suggestions, always consider:\\n1. Game rule compliance and edge cases\\n2. Security implications of the implementation\\n3. Real-time synchronization requirements\\n4. User experience and accessibility\\n5. Performance impact on mobile devices\\n6. Proper error handling and recovery\\n7. Testing implications and coverage\\n\\nThis project prioritizes security, user experience, and maintainability while delivering a faithful digital adaptation of the Secret Hitler board game.\"}",
+                  "id": "toolu_0164T5Fy33uBmim3PzYSV5Cm__vscode-1748955205089"
+                }
+              ],
+              "toolInputRetry": 0,
+              "id": "636a13bc-00da-4f16-8afc-9fee03c61fce"
+            },
+            {
+              "response": "I've created a comprehensive `.github/copilot-instructions.md` file that will help GitHub Copilot understand your Secret Hitler Flutter app project. This file includes:\n\n## Key Sections Covered:\n\n1. **Project Overview** - Clear description of the Secret Hitler game and app purpose\n2. **Architecture & Technical Stack** - MVVM pattern, Flutter, Firebase, Riverpod details\n3. **Game Mechanics Context** - Detailed explanation of Secret Hitler rules and flow\n4. **Data Model & Security** - Firebase structure and security considerations\n5. **Development Guidelines** - Code style, conventions, and best practices\n6. **Phase-wise Development Context** - Current development phase awareness\n7. **Specific Coding Guidelines** - Targeted advice for different areas of development\n8. **Testing Strategy** - Comprehensive testing approach\n9. **Performance & Accessibility** - Important considerations for mobile apps\n10. **Common Patterns** - Code examples for typical scenarios\n\n## Benefits for Development:\n\n- **Context-Aware Suggestions**: Copilot will understand the game rules and provide relevant code\n- **Security-First Approach**: Emphasis on protecting hidden information and preventing cheating\n- **Architecture Compliance**: Suggestions will follow MVVM and clean architecture patterns\n- **Firebase Integration**: Better suggestions for real-time multiplayer functionality\n- **Game-Specific Logic**: Understanding of election phases, presidential powers, and win conditions\n\nThis file will significantly improve the quality and relevance of GitHub Copilot's suggestions throughout your development process, ensuring that generated code aligns with your project's architecture, security requirements, and game mechanics.",
+              "toolCalls": [],
+              "toolInputRetry": 0,
+              "id": "0fca2e4f-d222-47b7-827d-a3072ff8e2e5"
+            }
+          ],
+          "toolCallResults": {
+            "toolu_0164T5Fy33uBmim3PzYSV5Cm__vscode-1748955205089": {
+              "$mid": 20,
+              "content": [
+                {
+                  "$mid": 22,
+                  "value": {
+                    "node": {
+                      "type": 1,
+                      "ctor": 2,
+                      "ctorName": "Jm",
+                      "children": [
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "The following files were successfully edited:",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "\n",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "c:\\Users\\Shalmon Anandas\\projects\\secret_hitler\\.github\\copilot-instructions.md",
+                          "lineBreakBefore": false
+                        },
+                        {
+                          "type": 2,
+                          "priority": 9007199254740991,
+                          "text": "\n",
+                          "lineBreakBefore": false
+                        }
+                      ],
+                      "props": {},
+                      "references": []
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "modelMessageId": "172b1f7f-6b43-43d6-bbb5-73229be43aa1",
+          "responseId": "a5b41127-a12b-4f8b-ace1-f9bb8244fa54",
+          "sessionId": "66bb4801-1154-415b-8a0b-13caf2d25e10",
+          "agentId": "github.copilot.editsAgent"
+        }
+      },
+      "followups": [],
+      "isCanceled": false,
+      "agent": {
+        "extensionId": {
+          "value": "GitHub.copilot-chat",
+          "_lower": "github.copilot-chat"
+        },
+        "publisherDisplayName": "GitHub",
+        "extensionPublisherId": "GitHub",
+        "extensionDisplayName": "GitHub Copilot Chat",
+        "id": "github.copilot.editsAgent",
+        "description": "Edit files in your workspace in agent mode",
+        "when": "config.chat.agent.enabled && !chatAgentModeDisallowed",
+        "metadata": {
+          "themeIcon": {
+            "id": "tools"
+          },
+          "hasFollowups": false,
+          "supportIssueReporting": false
+        },
+        "name": "agent",
+        "fullName": "GitHub Copilot",
+        "isDefault": true,
+        "locations": [
+          "panel"
+        ],
+        "modes": [
+          "agent"
+        ],
+        "slashCommands": [
+          {
+            "name": "list"
+          }
+        ],
+        "disambiguation": []
+      },
+      "contentReferences": [],
+      "codeCitations": [],
+      "timestamp": 1748955552825
+    }
+  ]
+}

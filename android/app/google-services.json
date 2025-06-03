@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "175863645427",
+    "project_id": "secret-hitler-1707",
+    "storage_bucket": "secret-hitler-1707.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175863645427:android:70fd625606a2749ec72386",
+        "android_client_info": {
+          "package_name": "com.example.secret_hitler"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAELQ4eirlsf3uPmgUhrLKS-3qmLRcjM4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

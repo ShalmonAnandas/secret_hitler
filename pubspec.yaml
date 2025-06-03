@@ -1,0 +1,59 @@
+name: secret_hitler
+description: "A Flutter-based mobile application for the board game Secret Hitler with real-time multiplayer gameplay."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.2
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Firebase
+  firebase_core: ^3.8.0
+  firebase_auth: ^5.5.0
+  cloud_firestore: ^5.6.0
+  firebase_storage: ^12.4.0
+  
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  
+  # Navigation
+  go_router: ^14.6.1
+    # UI & Design
+  flutter_screenutil: ^5.9.3
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.14
+    # Utilities
+  uuid: ^4.5.1
+  intl: ^0.20.1
+  logger: ^2.5.0
+  equatable: ^2.0.7
+  json_annotation: ^4.9.0
+  crypto: ^3.0.3
+  
+  # Google Sign In
+  google_sign_in: ^6.2.2
+  
+  # Local Storage
+  shared_preferences: ^2.4.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  
+  # Code Generation
+  build_runner: ^2.4.13
+  json_serializable: ^6.9.2
+  riverpod_generator: ^2.6.2
+  
+  # Testing
+  mockito: ^5.4.5
+  fake_cloud_firestore: ^3.0.4
+
+flutter:
+  uses-material-design: true
