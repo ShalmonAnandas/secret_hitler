@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/game_constants.dart';
 import '../../providers/game_provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/username_provider.dart';
 import '../../router/app_router.dart';
 import '../../widgets/common/app_widgets.dart' as common;
 
@@ -18,31 +18,29 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   bool _isPrivate = false;
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
+    final usernameState = ref.watch(usernameProvider);
 
     return Scaffold(
       appBar: const common.CustomAppBar(title: 'Create Game'),
-      body: authState.when(
+      body: usernameState.when(
         data:
-            (user) =>
-                user != null
-                    ? _buildCreateGameForm(context, user.id, user.displayName)
-                    : _buildSignInRequired(context),
+            (username) =>
+                username != null && username.isNotEmpty
+                    ? _buildCreateGameForm(context, username)
+                    : _buildUsernameRequired(context),
         loading: () => const common.LoadingWidget(message: 'Loading...'),
         error:
             (error, _) => common.ErrorWidget(
               message: error.toString(),
-              onRetry: () => ref.refresh(authProvider),
+              onRetry: () => ref.refresh(usernameProvider),
             ),
       ),
     );
   }
 
-  Widget _buildCreateGameForm(
-    BuildContext context,
-    String userId,
-    String userName,
-  ) {
+  Widget _buildCreateGameForm(BuildContext context, String userName) {
+    final usernameNotifier = ref.read(usernameProvider.notifier);
+    final userId = usernameNotifier.userId;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -153,7 +151,7 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
 
   Widget _buildGameInfo(BuildContext context) {
     return common.AppCard(
-      color: Theme.of(context).primaryColor.withOpacity(0.1),
+      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
       child: Column(
         children: [
           Row(
@@ -209,13 +207,13 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
     );
   }
 
-  Widget _buildSignInRequired(BuildContext context) {
+  Widget _buildUsernameRequired(BuildContext context) {
     return common.EmptyStateWidget(
-      title: 'Sign In Required',
-      message: 'You need to sign in to create a game',
+      title: 'Username Required',
+      message: 'You need to set your username to create a game',
       icon: Icons.person_off,
-      onAction: () => context.goToSignIn(),
-      actionLabel: 'Sign In',
+      onAction: () => context.goToUsernameEntry(),
+      actionLabel: 'Set Username',
     );
   }
 

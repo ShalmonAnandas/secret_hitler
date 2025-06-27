@@ -201,4 +201,74 @@ class GameUseCase {
   Stream<List<Game>> watchActiveGames() {
     return _gameRepository.watchActiveGames();
   }
+
+  // Player-related methods
+
+  /// Get all players in a game
+  Future<List<Player>> getPlayers(String gameId) async {
+    return await _playerRepository.getPlayers(gameId);
+  }
+
+  /// Watch players in a game
+  Stream<List<Player>> watchPlayers(String gameId) {
+    return _playerRepository.watchPlayers(gameId);
+  }
+
+  /// Get a specific player
+  Future<Player?> getPlayer(String gameId, String playerId) async {
+    return await _playerRepository.getPlayer(gameId, playerId);
+  }
+
+  /// Toggle player ready status
+  Future<void> togglePlayerReady(String gameId, String playerId) async {
+    final player = await _playerRepository.getPlayer(gameId, playerId);
+    if (player == null) {
+      throw Exception('Player not found');
+    }
+
+    final updatedPlayer = player.copyWith(isReady: !player.isReady);
+    await _playerRepository.updatePlayer(gameId, updatedPlayer);
+  }
+
+  /// Transfer host privileges to another player
+  Future<void> transferHost(String gameId, String newHostId) async {
+    final game = await _gameRepository.getGameById(gameId);
+    if (game == null) {
+      throw Exception('Game not found');
+    }
+
+    final players = await _playerRepository.getPlayers(gameId);
+
+    // Remove host status from current host
+    final currentHost = players.firstWhere((p) => p.isHost);
+    final updatedCurrentHost = currentHost.copyWith(isHost: false);
+    await _playerRepository.updatePlayer(gameId, updatedCurrentHost);
+
+    // Set new host
+    final newHost = players.firstWhere((p) => p.id == newHostId);
+    final updatedNewHost = newHost.copyWith(isHost: true);
+    await _playerRepository.updatePlayer(gameId, updatedNewHost);
+
+    // Update game host ID
+    final updatedGame = game.copyWith(hostId: newHostId);
+    await _gameRepository.updateGame(updatedGame);
+  }
+
+  /// Kick a player from the game (host only)
+  Future<void> kickPlayer(String gameId, String playerId, String hostId) async {
+    final game = await _gameRepository.getGameById(gameId);
+    if (game == null) {
+      throw Exception('Game not found');
+    }
+
+    if (game.hostId != hostId) {
+      throw Exception('Only the host can kick players');
+    }
+
+    if (playerId == hostId) {
+      throw Exception('Host cannot kick themselves');
+    }
+
+    await leaveGame(gameId, playerId);
+  }
 }

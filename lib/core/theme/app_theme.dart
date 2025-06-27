@@ -96,7 +96,7 @@ class AppTheme {
           vertical: 12,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(8),
@@ -120,12 +120,10 @@ class AppTheme {
         primary: primaryColor,
         secondary: secondaryColor,
         surface: darkSurfaceColor,
-        background: darkBackgroundColor,
         error: errorColor,
         onPrimary: textOnPrimary,
         onSecondary: textOnDark,
         onSurface: darkTextPrimary,
-        onBackground: darkTextPrimary,
         onError: textOnDark,
       ),
       textTheme: _buildTextTheme(darkTextPrimary),
@@ -176,7 +174,7 @@ class AppTheme {
           vertical: 12,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 4,
         color: darkSurfaceColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

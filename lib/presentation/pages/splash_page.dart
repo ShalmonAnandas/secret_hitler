@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../providers/username_provider.dart';
+import '../router/app_router.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
+class _SplashPageState extends ConsumerState<SplashPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -36,10 +40,37 @@ class _SplashPageState extends State<SplashPage>
     // Navigate to next screen after delay
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        // TODO: Navigate to authentication or main menu based on user state
-        // For now, we'll just show a placeholder
+        _navigateToNextScreen();
       }
     });
+  }
+
+  void _navigateToNextScreen() {
+    final usernameState = ref.read(usernameProvider);
+
+    usernameState.when(
+      data: (username) {
+        if (username != null && username.isNotEmpty) {
+          // Username is set, go to home
+          context.go(AppRoutes.home);
+        } else {
+          // Username is not set, go to username entry
+          context.go(AppRoutes.usernameEntry);
+        }
+      },
+      loading: () {
+        // Still loading, stay on splash a bit longer
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            _navigateToNextScreen();
+          }
+        });
+      },
+      error: (error, stack) {
+        // Error occurred, go to username entry
+        context.go(AppRoutes.usernameEntry);
+      },
+    );
   }
 
   @override
@@ -72,7 +103,7 @@ class _SplashPageState extends State<SplashPage>
                         borderRadius: BorderRadius.circular(20.r),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                             blurRadius: 10.r,
                             offset: Offset(0, 5.h),
                           ),
@@ -106,7 +137,7 @@ class _SplashPageState extends State<SplashPage>
                     Text(
                       'A Social Deduction Game',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         letterSpacing: 1.0,
                       ),
                       textAlign: TextAlign.center,

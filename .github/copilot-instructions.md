@@ -2,98 +2,110 @@
 
 ## Project Overview
 
-This is a Flutter-based mobile application for the board game "Secret Hitler" - a social deduction game where players are divided into Liberals and Fascists, with one player secretly being Hitler. The app provides real-time multiplayer gameplay using Firebase Firestore for synchronization.
+Flutter-based mobile application for the Secret Hitler board game - a social deduction game with real-time multiplayer gameplay using Firebase Firestore. Uses simplified username-only authentication (no Firebase Auth).
 
-## Architecture & Technical Stack
+## Core Commands
 
-### Architecture Pattern
-- **MVVM (Model-View-ViewModel)** pattern with clear separation of concerns
-- **Repository Pattern** for data layer abstraction
-- **Clean Architecture** principles with domain, data, and presentation layers
+### Build & Development
+- `flutter pub get` - Install dependencies
+- `flutter run` - Run app in debug mode
+- `flutter build apk` - Build Android APK
+- `flutter build ios` - Build iOS app
+- `dart run build_runner build --delete-conflicting-outputs` - Generate code
 
-### Technology Stack
-- **Frontend**: Flutter (Dart)
-- **State Management**: Riverpod
-- **Backend**: Firebase (Firestore, Auth, Cloud Functions)
+### Testing & Analysis
+- `flutter test` - Run all tests
+- `flutter test test/path/to/test.dart` - Run specific test
+- `flutter analyze` - Static analysis
+- `flutter doctor` - Check Flutter environment
+
+### Maintenance
+- `flutter clean` - Clean build cache
+- `flutter pub upgrade` - Update dependencies
+- `firebase deploy` - Deploy Firestore rules/functions
+
+## Architecture
+
+### Tech Stack
+- **Frontend**: Flutter/Dart with Material Design 3
+- **State Management**: Riverpod (StateNotifierProvider, StreamProvider)
+- **Backend**: Firebase Firestore (no Authentication)
 - **Navigation**: GoRouter
-- **UI Framework**: Material Design 3
+- **Local Storage**: SharedPreferences for username
+- **Real-time**: Firestore snapshots
 
 ### Project Structure
 ```
 lib/
-├── core/                    # Core utilities, constants, themes
-├── data/                    # Data layer (models, repositories, services)
-├── domain/                  # Domain layer (entities, use cases)
-├── presentation/            # UI layer (pages, widgets, providers)
-└── main.dart               # App entry point
+├── core/               # Constants, themes, utils, exceptions
+├── data/               # Models, repositories, services
+│   ├── models/         # JSON serializable data models
+│   ├── repositories/   # Firebase repository implementations
+│   └── services/       # Firestore & username services
+├── domain/             # Entities, repository interfaces, use cases
+├── presentation/       # UI layer
+│   ├── pages/          # Screen widgets
+│   ├── providers/      # Riverpod state providers
+│   ├── router/         # GoRouter configuration
+│   └── widgets/        # Reusable UI components
+└── main.dart
 ```
 
-## Game Mechanics Context
+### Authentication Model
+- **Username-only**: No Firebase Auth, uses SharedPreferences
+- **User ID**: Generated UUID stored locally
+- **Flow**: Username Entry → Home → Game Creation/Joining
 
-### Core Concepts
-- **Players**: 5-10 players divided into Liberals (majority) and Fascists (minority + Hitler)
-- **Objective**: 
-  - Liberals: Enact 5 Liberal policies OR assassinate Hitler
-  - Fascists: Enact 6 Fascist policies OR elect Hitler as Chancellor after 3 Fascist policies
-- **Roles**: Liberal, Fascist, Hitler (distributed based on player count)
-- **Game Flow**: Election Phase → Legislative Phase → Presidential Powers (if applicable)
+## Firebase Data Model
 
-### Key Game Elements
-- **Policy Tracks**: Liberal (5 slots) and Fascist (6 slots)
-- **Election Tracker**: Tracks failed elections (resets after successful election)
-- **Presidential Powers**: Activated after enacting certain Fascist policies
-- **Veto Power**: Available after 5 Fascist policies are enacted
+### Collections
+- `games/` - Game documents with public state
+  - `players/` - Subcollection with player data
+  - Game codes, status, settings, policy tracks
+- **Security**: Open read/write (no authentication required)
 
-### Presidential Powers (by player count)
-- **Policy Peek**: President sees top 3 policies
-- **Investigate Loyalty**: President sees another player's party membership
-- **Special Election**: President chooses next Presidential candidate
-- **Execution**: President eliminates a player
+### Key Services
+- `FirestoreService` - Generic Firestore operations
+- `UsernameService` - Local username management with SharedPreferences
+- Repository pattern for games and players
 
-## Data Model & Security
+## Game Mechanics
 
-### Firebase Collections Structure
-```
-users/                      # Public user profiles
-games/                      # Public game state
-  ├── players/             # Private player data (roles, policies)
-  ├── policyDeck/          # Private deck state
-  ├── discardPile/         # Public discard pile
-  └── chat/                # Optional chat messages
-```
+### Core Rules
+- **Players**: 5-10 divided into Liberals (majority) vs Fascists + Hitler
+- **Victory**: Liberals win by 5 policies OR killing Hitler; Fascists win by 6 policies OR electing Hitler Chancellor after 3 Fascist policies
+- **Phases**: Election → Legislative → Presidential Powers
 
-### Security Considerations
-- **Hidden Information**: Roles, policy hands, deck order must be secure
-- **Server-side Logic**: Critical operations via Cloud Functions
-- **Access Control**: Strict Firestore security rules
-- **Anti-cheat**: Validate all actions server-side
+### Key Features
+- Real-time lobby with player management
+- Game creation with player limits (5-10)
+- Join games via 6-character codes
+- Host controls (kick players, transfer host, start game)
 
 ## Development Guidelines
 
-### Code Style & Conventions
-- Follow Flutter/Dart style guide
-- Use meaningful variable and function names
-- Implement proper error handling
-- Add comprehensive documentation
-- Write unit tests for business logic
-
 ### State Management with Riverpod
-- Use `StateProvider` for simple state
-- Use `StateNotifierProvider` for complex state with logic
-- Use `StreamProvider` for Firebase real-time data
-- Implement proper disposal and error handling
+- `usernameProvider` - StateNotifierProvider for username state
+- `gameStreamProvider` - StreamProvider for real-time game data
+- `playersStreamProvider` - StreamProvider for player updates
+- Use `ref.read()` for one-time reads, `ref.watch()` for reactive updates
+
+### Code Style
+- Follow Flutter/Dart style guide
+- Use meaningful names, proper error handling
+- Implement loading/error states for all async operations
+- Create reusable widgets in `presentation/widgets/`
+
+### Navigation with GoRouter
+- Routes: `/` (splash) → `/username` → `/home` → `/lobby/:gameId`
+- Use `context.go()` for navigation, `context.push()` for modals
+- Handle deep linking for game invitations
 
 ### Firebase Integration
-- Use Firestore `snapshots()` for real-time updates
-- Implement offline persistence
+- Use `snapshots()` for real-time updates
+- Handle offline scenarios gracefully
 - Use transactions for atomic operations
-- Handle connection states properly
-
-### UI/UX Principles
-- **Clarity**: Clear visual feedback for all actions
-- **Responsiveness**: Support various screen sizes
-- **Accessibility**: Proper semantic labels and contrast
-- **Privacy**: Secure handling of hidden information (roles, policies)
+- Generate unique IDs with `FirestoreService.generateId()`
 
 ## Phase-wise Development Context
 
@@ -101,12 +113,12 @@ games/                      # Public game state
 Focus on establishing core architecture, dependencies, and basic project structure.
 
 ### Key Implementation Areas
-1. **Authentication System** - Multi-provider auth with upgrade paths
-2. **Lobby System** - Creation, discovery, joining, and management
-3. **Core Game Logic** - Election and legislative phases
-4. **Real-time Synchronization** - Firebase Firestore integration
-5. **Security Implementation** - Rules and Cloud Functions
-6. **UI/UX Polish** - Responsive design and animations
+1. **Username System** - Local storage with SharedPreferences
+2. **Lobby System** - Real-time game creation and joining
+3. **Player Management** - Host controls, ready states, kicking
+4. **Game Flow** - Election and legislative phases
+5. **Real-time Sync** - Firebase Firestore integration
+6. **UI Polish** - Material Design 3, responsive layouts
 
 ## Specific Coding Guidelines
 
@@ -198,14 +210,6 @@ final gameStreamProvider = StreamProvider.family<Game, String>((ref, gameId) {
   return ref.read(gameRepositoryProvider).watchGame(gameId);
 });
 ```
-
-## Security Rules Context
-
-Remember that Firestore security rules should:
-- Prevent access to hidden game information
-- Validate game state transitions
-- Ensure only authorized players can modify game data
-- Log suspicious activities
 
 ## Deployment & CI/CD
 

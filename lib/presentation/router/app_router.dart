@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../pages/splash_page.dart';
+import '../pages/username_entry_page.dart';
 import '../pages/home_page.dart';
-import '../pages/auth/sign_in_page.dart';
+import '../pages/profile_page.dart';
 import '../pages/game/lobby_page.dart';
 import '../pages/game/create_game_page.dart';
 
 /// Application routes
 class AppRoutes {
   static const String splash = '/';
+  static const String usernameEntry = '/username';
   static const String home = '/home';
-  static const String signIn = '/sign-in';
+  static const String profile = '/profile';
   static const String createGame = '/create-game';
   static const String lobby = '/lobby';
   static const String game = '/game';
@@ -31,9 +33,14 @@ final appRouter = GoRouter(
       builder: (context, state) => const HomePage(),
     ),
     GoRoute(
-      path: AppRoutes.signIn,
-      name: 'signIn',
-      builder: (context, state) => const SignInPage(),
+      path: AppRoutes.usernameEntry,
+      name: 'usernameEntry',
+      builder: (context, state) => const UsernameEntryPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.profile,
+      name: 'profile',
+      builder: (context, state) => const ProfilePage(),
     ),
     GoRoute(
       path: AppRoutes.createGame,
@@ -108,8 +115,8 @@ extension AppNavigation on BuildContext {
   /// Navigate to home page
   void goToHome() => go(AppRoutes.home);
 
-  /// Navigate to sign in page
-  void goToSignIn() => go(AppRoutes.signIn);
+  /// Navigate to username entry page
+  void goToUsernameEntry() => go(AppRoutes.usernameEntry);
 
   /// Navigate to lobby page
   void goToLobby(String gameId) => go('${AppRoutes.lobby}/$gameId');

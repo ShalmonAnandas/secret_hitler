@@ -36,6 +36,12 @@ final activeGamesProvider =
       return ActiveGamesNotifier(gameUseCase);
     });
 
+/// Provider for watching a specific game (stream)
+final gameStreamProvider = StreamProvider.family<Game?, String>((ref, gameId) {
+  final gameUseCase = ref.read(gameUseCaseProvider);
+  return gameUseCase.watchGame(gameId);
+});
+
 /// Notifier for creating games
 class CreateGameNotifier extends StateNotifier<AsyncValue<Game?>> {
   final GameUseCase _gameUseCase;

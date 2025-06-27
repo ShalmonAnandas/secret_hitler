@@ -8,7 +8,6 @@ class FirestoreService {
     : _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Collection references
-  CollectionReference get usersCollection => _firestore.collection('users');
   CollectionReference get gamesCollection => _firestore.collection('games');
 
   /// Get subcollection reference for players in a game

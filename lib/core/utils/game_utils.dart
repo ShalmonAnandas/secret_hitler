@@ -92,8 +92,9 @@ class GameUtils {
     if (playerId == currentPresidentId) return false;
 
     // Cannot nominate the previous Chancellor (unless only 5 players total)
-    if (playerId == previousChancellorId && alivePlayers.length > 5)
+    if (playerId == previousChancellorId && alivePlayers.length > 5) {
       return false;
+    }
 
     // Player must be alive
     if (!alivePlayers.contains(playerId)) return false;

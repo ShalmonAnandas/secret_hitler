@@ -50,6 +50,17 @@ class ValidationUtils {
     return null;
   }
 
+  /// Checks if display name is valid (boolean version)
+  static bool isValidDisplayName(String displayName) {
+    if (displayName.isEmpty) return false;
+
+    final trimmed = displayName.trim();
+
+    if (trimmed.length < 2 || trimmed.length > 20) return false;
+
+    return _displayNameRegex.hasMatch(trimmed);
+  }
+
   /// Validates email address
   static String? validateEmail(String? email) {
     if (email == null || email.trim().isEmpty) {
@@ -147,6 +158,17 @@ class ValidationUtils {
     }
 
     return null;
+  }
+
+  /// Checks if access code is valid (boolean version)
+  static bool isValidAccessCode(String accessCode) {
+    if (accessCode.isEmpty) return false;
+
+    final trimmed = accessCode.trim().toUpperCase();
+
+    if (trimmed.length != 6) return false;
+
+    return _accessCodeRegex.hasMatch(trimmed);
   }
 
   /// Validates player count

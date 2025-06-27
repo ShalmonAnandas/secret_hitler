@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:secret_hitler/presentation/providers/app_providers.dart';
 import '../../providers/game_provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/username_provider.dart';
 import '../../widgets/common/app_widgets.dart';
 import '../../router/app_router.dart';
 
@@ -23,11 +23,11 @@ class _JoinGamePageState extends ConsumerState<JoinGamePage> {
   @override
   void initState() {
     super.initState();
-    // Prefill player name with user's display name
+    // Prefill player name with username
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = ref.read(authProvider).valueOrNull;
-      if (user != null) {
-        _playerNameController.text = user.displayName;
+      final username = ref.read(usernameProvider).valueOrNull;
+      if (username != null) {
+        _playerNameController.text = username;
       }
     });
   }
@@ -49,13 +49,14 @@ class _JoinGamePageState extends ConsumerState<JoinGamePage> {
     try {
       final gameCode = _gameCodeController.text.trim().toUpperCase();
       final playerName = _playerNameController.text.trim();
-      final currentUser = ref.read(authProvider).valueOrNull;
+      final usernameNotifier = ref.read(usernameProvider.notifier);
+      final userId = usernameNotifier.userId;
 
-      if (currentUser == null) {
+      if (!usernameNotifier.hasUsername) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Please sign in first')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please set your username first')),
+          );
         }
         setState(() {
           _isLoading = false;
@@ -67,7 +68,7 @@ class _JoinGamePageState extends ConsumerState<JoinGamePage> {
           .read(joinGameProvider.notifier)
           .joinGame(
             gameCode: gameCode,
-            playerId: currentUser.id,
+            playerId: userId,
             playerName: playerName,
           );
 
@@ -125,7 +126,7 @@ class _JoinGamePageState extends ConsumerState<JoinGamePage> {
                 Text(
                   'Enter the game code provided by the host',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                   textAlign: TextAlign.center,
                 ),
